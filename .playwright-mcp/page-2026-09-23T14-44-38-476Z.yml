@@ -1,0 +1,168 @@
+- generic [ref=f3e5]:
+  - link "Skip to main content" [ref=f3e6] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f3e8]:
+    - generic [ref=f3e9]:
+      - text: A new version (v0.11.4) is now available.
+      - link "Update for the latest features and improvements." [ref=f3e10] [cursor=pointer]:
+        - /url: https://github.com/open-webui/open-webui/releases
+    - button [ref=f3e12] [cursor=pointer]
+  - generic [ref=f3e16]:
+    - navigation "Chat history" [ref=f3e17]:
+      - button [ref=f3e18]:
+        - button "Open Sidebar" [ref=f3e21]
+        - generic [ref=f3e23]:
+          - link "New Chat" [ref=f3e26] [cursor=pointer]:
+            - /url: /
+          - button "Search" [ref=f3e32] [cursor=pointer]
+          - link "Notes" [ref=f3e39] [cursor=pointer]:
+            - /url: /notes
+          - link "Workspace" [ref=f3e46] [cursor=pointer]:
+            - /url: /workspace
+      - button [ref=f3e56] [cursor=pointer]:
+        - button "User menu" [ref=f3e57]:
+          - img "Open User Profile Menu" [ref=f3e59]
+    - generic:
+      - generic:
+        - link:
+          - /url: /
+        - link:
+          - /url: /
+          - generic: Open WebUI
+        - generic:
+          - button
+      - generic:
+        - generic:
+          - generic:
+            - link:
+              - /url: /
+              - generic: New Chat
+              - generic: ⌘⇧O
+          - generic:
+            - button:
+              - generic: Search
+              - generic: ⌘K
+          - generic:
+            - generic:
+              - link:
+                - /url: /notes
+                - generic: Notes
+            - generic:
+              - link:
+                - /url: /workspace
+                - generic: Workspace
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - button:
+                      - generic: Folders
+                    - button
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - button [expanded]:
+                      - generic: Chats
+                    - generic:
+                      - button:
+                        - generic:
+                          - button
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: Today
+                    - generic:
+                      - button:
+                        - generic: A server processes 120 requests per minute. Traffic increases by 25 percent, then decreases by 20 percent. What is the final requests-per-minute rate? Show the calculation briefly.
+                      - generic:
+                        - generic:
+                          - button:
+                            - generic:
+                              - button
+                    - generic: Previous 7 days
+                    - generic:
+                      - button:
+                        - generic: Show me a code snippet of a website's sticky header in CSS and JavaScript.
+                        - generic: 1d
+                      - generic:
+                        - generic:
+                          - button:
+                            - generic:
+                              - button
+                    - generic:
+                      - button:
+                        - generic: What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.
+                        - generic: 1d
+                      - generic:
+                        - generic:
+                          - button:
+                            - generic:
+                              - button
+                    - generic:
+                      - button:
+                        - generic: Roman Empire
+                        - generic: 1d
+                      - generic:
+                        - generic:
+                          - button:
+                            - generic:
+                              - button
+                    - generic:
+                      - button:
+                        - generic: Hello
+                        - generic: 1d
+                      - generic:
+                        - generic:
+                          - button:
+                            - generic:
+                              - button
+                    - generic: Loading...
+      - generic:
+        - generic:
+          - button:
+            - button:
+              - generic: dharmin
+    - main [ref=f3e63]:
+      - generic [ref=f3e67]:
+        - navigation [ref=f3e68]:
+          - generic [ref=f3e71]:
+            - generic [ref=f3e300]:
+              - generic [ref=f3e301]: New Chat
+              - button [ref=f3e302] [cursor=pointer]:
+                - button "Chat actions" [ref=f3e303]
+            - button "Controls" [ref=f3e79] [cursor=pointer]
+        - generic [ref=f3e82]:
+          - region [ref=f3e310]:
+            - heading "Chat Conversation" [level=2] [ref=f3e311]
+            - log [ref=f3e312]:
+              - listitem [ref=f3e313]:
+                - generic [ref=f3e316]:
+                  - paragraph [ref=f3e321]: A server processes 120 requests per minute. Traffic increases by 25 percent, then decreases by 20 percent. What is the final requests-per-minute rate? Show the calculation briefly.
+                  - generic [ref=f3e322]:
+                    - generic [ref=f3e323]:
+                      - time: Sep 23, 10:44 AM
+                    - generic [ref=f3e324]:
+                      - button "Edit"
+                    - generic [ref=f3e325]:
+                      - button "Copy"
+              - listitem [ref=f3e326]:
+                - generic [ref=f3e327]: llama3.2:1b
+          - generic [ref=f3e347]:
+            - generic "Send a Message" [active] [ref=f3e351]:
+              - paragraph [ref=f3e352]: Send a Message
+            - generic [ref=f3e353]:
+              - generic [ref=f3e354]:
+                - button [ref=f3e355] [cursor=pointer]:
+                  - button "More" [ref=f3e357]
+                - button [ref=f3e362] [cursor=pointer]:
+                  - button "Integrations" [ref=f3e364]
+              - generic [ref=f3e370]:
+                - 'button "Selected model: llama3.2:1b" [ref=f3e377] [cursor=pointer]':
+                  - generic [ref=f3e378]: llama3.2:1b
+                - button "Stop" [ref=f3e384] [cursor=pointer]

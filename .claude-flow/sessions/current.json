@@ -1,0 +1,13 @@
+{
+  "id": "session-1790175046311",
+  "startedAt": "2026-09-23T14:50:46.311Z",
+  "cwd": "/Users/dharminpatel/ollama-webui",
+  "context": {},
+  "metrics": {
+    "edits": 0,
+    "commands": 0,
+    "tasks": 0,
+    "errors": 0
+  },
+  "restoredAt": "2026-09-23T15:30:46.962Z"
+}

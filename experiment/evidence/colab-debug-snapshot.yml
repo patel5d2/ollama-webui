@@ -1,0 +1,225 @@
+- generic [ref=f12e1]:
+  - generic: Change to a standard runtime
+  - generic [ref=f12e2]:
+    - link "Skip to main content" [ref=f12e5] [cursor=pointer]:
+      - /url: "#notebook-main"
+    - banner [ref=f12e9]:
+      - generic [ref=f12e10]:
+        - generic [ref=f12e12]:
+          - generic [ref=f12e13]: Colab is now part of Google AI Plans.
+          - text: Get upgraded compute power and a suite of new AI tools all in one bundle.
+        - generic [ref=f12e14]:
+          - link "Explore the Plans Link will open in a new tab" [ref=f12e17] [cursor=pointer]:
+            - /url: /signup
+            - generic [ref=f12e19]: Explore the Plans
+          - generic "Close" [ref=f12e20]:
+            - button "Close" [ref=f12e21] [cursor=pointer]
+      - generic [ref=f12e27]:
+        - link "Colab home" [ref=f12e30] [cursor=pointer]:
+          - /url: https://colab.research.google.com/
+        - generic [ref=f12e39]:
+          - generic [ref=f12e40]:
+            - textbox "Notebook name" [ref=f12e49]: LLM_Hosting_Experiment.ipynb
+            - generic [aria-hidden] [ref=f12e50]: LLM_Hosting_Experiment.ipynb_
+            - button "Star" [ref=f12e52] [cursor=pointer]
+            - button "All changes saved" [ref=f12e963] [cursor=pointer]
+          - menubar [ref=f12e64]:
+            - button "File" [ref=f12e65] [cursor=pointer]
+            - button "Edit" [ref=f12e69] [cursor=pointer]
+            - button "View" [ref=f12e73] [cursor=pointer]
+            - button "Insert" [ref=f12e77] [cursor=pointer]
+            - button "Runtime" [ref=f12e81] [cursor=pointer]
+            - button "Tools" [ref=f12e85] [cursor=pointer]
+            - button "Help" [ref=f12e89] [cursor=pointer]
+        - generic [ref=f12e93]:
+          - button "Open comments pane" [ref=f12e95] [cursor=pointer]
+          - button "Open settings" [ref=f12e100] [cursor=pointer]
+          - button "Share notebook" [ref=f12e106] [cursor=pointer]:
+            - generic [ref=f12e109]: Share
+          - 'button "Google Account: Dharmin Patel (22pateldh@gmail.com)" [ref=f12e117] [cursor=pointer]'
+    - generic [ref=f12e120]:
+      - button "Commands Show command palette ⌘/Ctrl+Shift+P" [ref=f12e124] [cursor=pointer]:
+        - generic [ref=f12e127]:
+          - generic:
+            - generic [ref=f12e128]: Commands
+            - generic [ref=f12e129]: Show command palette ⌘/Ctrl+Shift+P
+      - generic [ref=f12e130]:
+        - button "Code Insert code cell below ⌘/Ctrl+M B" [ref=f12e134] [cursor=pointer]:
+          - generic [ref=f12e137]:
+            - generic:
+              - generic [ref=f12e138]: Code
+              - generic [ref=f12e139]: Insert code cell below ⌘/Ctrl+M B
+        - button "Insert code cell options" [ref=f12e141] [cursor=pointer]
+      - button "Text Add text cell" [ref=f12e147] [cursor=pointer]:
+        - generic [ref=f12e150]:
+          - generic:
+            - generic [ref=f12e151]: Text
+            - generic [ref=f12e152]: Add text cell
+      - generic [ref=f12e154]:
+        - button "Run all Run all cells in notebook" [ref=f12e158] [cursor=pointer]:
+          - generic [ref=f12e161]:
+            - generic:
+              - generic [ref=f12e162]: Run all
+              - generic [ref=f12e163]: Run all cells in notebook
+        - button "More actions" [ref=f12e165] [cursor=pointer]
+      - generic [ref=f12e168]:
+        - button "Focus the last run cell" [ref=f12e170] [cursor=pointer]
+        - 'button "RAM Disk Connected to Python 3 Google Compute Engine backend (GPU) RAM: 1.19 GB/12.67 GB Disk: 47.38 GB/112.64 GB" [ref=f12e967] [cursor=pointer]':
+          - generic [ref=f12e179]:
+            - generic:
+              - generic [ref=f12e968]:
+                - generic [ref=f12e969]: RAM
+                - generic [ref=f12e972]: Disk
+              - generic [ref=f12e188]: "Connected to Python 3 Google Compute Engine backend (GPU) RAM: 1.19 GB/12.67 GB Disk: 47.38 GB/112.64 GB"
+        - button "Additional connection options" [ref=f12e190] [cursor=pointer]
+      - button "Toggle header visibility" [ref=f12e194] [cursor=pointer]
+    - generic [ref=f12e197]:
+      - complementary "left pane" [ref=f12e198]:
+        - toolbar [ref=f12e199]:
+          - generic [ref=f12e200]:
+            - generic "Table of contents" [ref=f12e202]:
+              - button "Table of contents" [ref=f12e203] [cursor=pointer]
+            - generic "Find and replace" [ref=f12e208]:
+              - button "Find and replace" [ref=f12e209] [cursor=pointer]
+            - generic "Code snippets" [ref=f12e214]:
+              - button "Code snippets" [ref=f12e215] [cursor=pointer]
+            - generic "Data inspector" [ref=f12e220]:
+              - button "Data inspector" [ref=f12e221] [cursor=pointer]
+            - generic "Secrets" [ref=f12e226]:
+              - button "Secrets" [ref=f12e227] [cursor=pointer]
+            - generic "Files" [ref=f12e232]:
+              - button "Files" [ref=f12e233] [cursor=pointer]
+            - generic "Data explorer" [ref=f12e238]:
+              - button "Data explorer" [ref=f12e239] [cursor=pointer]
+      - main "Notebook" [ref=f12e252]:
+        - generic [ref=f12e253]:
+          - generic [ref=f12e258]:
+            - 'region "Cell 0: Text cell: LLM Hosting Experiment — Colab" [ref=f12e259]':
+              - generic [ref=f12e265]:
+                - heading "LLM Hosting Experiment — Colab" [level=1] [ref=f12e267]
+                - paragraph [ref=f12e268]: Select Runtime → Change runtime type → T4 GPU (free). Run cells in order. The same saved prompts and runner are used on the Mac and Jetstream2. Download results before disconnecting. All input is fictional. These runs are assistant-assisted; inspect the code and repeat a live example for your video.
+            - 'region "Cell 1: Text cell: Experiment plan — saved before new measured runs" [ref=f12e270]':
+              - generic [ref=f12e276]:
+                - generic [ref=f12e277]:
+                  - generic "Collapse 8 child cells under Experiment plan — saved before new measured runs (Press <Shift> to also collapse sibling sections)" [ref=f12e278]
+                  - heading "Experiment plan — saved before new measured runs" [level=1] [ref=f12e283]
+                - paragraph [ref=f12e284]: Prepared 2026-09-23. Existing installation and model downloads predate this plan; do not claim this was written before installing tools. Measurements below are new, assistant-operated runs for the student to inspect and repeat.
+                - paragraph [ref=f12e285]: Use the exact five prompts in prompts.json on every model and environment. P1 is cybersecurity; P5 deliberately requests an invented citation to test hallucination and uncertainty. Expected P2 answer is 120. Assess P3 missing-key handling and P4 unsupported additions.
+                - paragraph [ref=f12e286]: "Local baseline: existing Docker Ollama and Open WebUI. Models: existing qwen3:1.7b, llama3.2:1b, and hf.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF:Q4_K_M downloaded from Hugging Face. Two families, three parameter sizes. Attempt a larger Qwen model on Jetstream2 if access and memory permit. Also measure native macOS Ollama GPU if installation is available; label CPU/GPU separately."
+                - paragraph [ref=f12e287]:
+                  - text: Use Ollama's non-streaming
+                  - link "/api/generate" [ref=f12e288] [cursor=pointer]:
+                    - /url: "#"
+                  - text: endpoint with no conversation history, temperature 0.2, top_p 0.9, num_predict 192, num_ctx 2048, seed 42, and think=false. Save exact settings, model metadata, version, answers and raw timings. A token limit may truncate answers; record done_reason. Downloads are excluded from model loading time.
+                - paragraph [ref=f12e289]: Unload before each model suite, load with an empty prompt, then run five warm prompts sequentially. Model load = dedicated request wall time and server load_duration. Answer time = client request wall time. Generation speed = eval_count / (eval_duration / 1e9); this excludes prompt processing and loading. One run per prompt is exploratory, not a statistically robust benchmark. OS file caches are not cleared, so unloaded does not mean disk-cold.
+                - paragraph [ref=f12e290]:
+                  - text: "Memory: sample"
+                  - link "/api/ps" [ref=f12e291] [cursor=pointer]:
+                    - /url: "#"
+                  - text: after each response, recording resident model allocation size and size_vram. This is an allocation snapshot, NOT peak RAM or whole-machine memory. Record host RAM and GPU separately, plus Docker VM RAM/CPU limits. Apply the same allocation measurement in every environment and mark unsupported measurements unavailable.
+                - paragraph [ref=f12e292]: "Settings experiment on qwen3:1.7b using P1: temperature 0.1 versus 1.2 at fixed top_p 0.9 and limit 192; then temperature 0.1 with token limit 64. Same seed, context and prompt. No causal claims from a single sample."
+                - table [ref=f12e293]:
+                  - rowgroup [ref=f12e294]
+                  - rowgroup [ref=f12e305]
+                - paragraph [ref=f12e316]: Save hardware command output, errors and troubleshooting. Do not fabricate unavailable cloud results. Screenshots should show visible model names, prompts and outputs without account credentials. Cloud access and live student narration are required to finish all evidence.
+              - generic [ref=f12e317]:
+                - generic: Code
+                - generic: Text
+            - 'region "Cell 2: Code cell:" [ref=f12e318]':
+              - generic [ref=f12e321]:
+                - generic [ref=f12e322]:
+                  - generic [ref=f12e326]
+                  - code [ref=f12e986]
+                - region "Cell 2 output" [ref=f12e346]:
+                  - generic [ref=f12e347]
+              - generic [ref=f12e366]:
+                - generic: Code
+                - generic: Text
+            - 'region "Cell 3: Code cell:" [ref=f12e367]':
+              - generic [ref=f12e391]:
+                - generic [ref=f12e392]:
+                  - generic [ref=f12e396]
+                  - generic [ref=f12e1640]
+                - region "Cell 3 output" [ref=f12e509]:
+                  - generic [ref=f12e510]
+              - generic [ref=f12e535]:
+                - generic: Code
+                - generic: Text
+            - 'region "Cell 4: Code cell:" [ref=f12e536]':
+              - generic [ref=f12e539]:
+                - generic [ref=f12e540]:
+                  - generic [ref=f12e544]
+                  - generic [ref=f12e1664]
+                - region "Cell 4 output" [ref=f12e1668]:
+                  - generic [ref=f12e1669]
+                - generic [ref=f12e1686]:
+                  - generic [ref=f12e1687]: "Next steps:"
+                  - button "Explain error" [ref=f12e1691] [cursor=pointer]
+              - generic [ref=f12e589]:
+                - generic: Code
+                - generic: Text
+            - 'region "Cell 5: Code cell:" [ref=f12e590]':
+              - generic [ref=f12e593]:
+                - generic [ref=f12e594]:
+                  - generic [ref=f12e598]
+                  - generic [ref=f12e609]
+                - region "Cell 5 output"
+              - generic [ref=f12e613]:
+                - generic: Code
+                - generic: Text
+            - 'region "Cell 6: Code cell:" [active] [ref=f12e614]':
+              - generic [ref=f12e1700]:
+                - button "Move cell up ⌘/Ctrl+M K" [ref=f12e1702] [cursor=pointer]
+                - button "Move cell down ⌘/Ctrl+M J" [ref=f12e1706] [cursor=pointer]
+                - button "Available AI features" [ref=f12e1710] [cursor=pointer]
+                - button "Delete cell ⌘/Ctrl+M D" [ref=f12e1714] [cursor=pointer]
+                - button "More cell actions" [ref=f12e1718] [cursor=pointer]
+              - generic [ref=f12e617]:
+                - generic [ref=f12e618]:
+                  - generic [ref=f12e622]
+                  - code [ref=f12e1727]
+                - region "Cell 6 output" [ref=f12e1752]:
+                  - generic [ref=f12e1753]
+                - generic [ref=f12e1770]:
+                  - generic [ref=f12e1771]: "Next steps:"
+                  - button "Explain error" [ref=f12e1775] [cursor=pointer]
+              - generic [ref=f12e637]:
+                - generic: Code
+                - generic: Text
+            - 'region "Cell 7: Code cell:" [ref=f12e638]':
+              - generic [ref=f12e641]:
+                - generic [ref=f12e642]:
+                  - generic [ref=f12e646]
+                  - generic [ref=f12e657]
+                - region "Cell 7 output"
+              - generic [ref=f12e666]:
+                - generic: Code
+                - generic: Text
+            - 'region "Cell 8: Code cell:" [ref=f12e667]':
+              - generic [ref=f12e670]:
+                - generic [ref=f12e671]:
+                  - generic [ref=f12e675]
+                  - generic [ref=f12e686]
+                - region "Cell 8 output"
+            - 'region "Cell 9: Text cell:" [ref=f12e694]':
+              - paragraph [ref=f12e701]: After saving evidence and recording your live example, choose Runtime → Disconnect and delete runtime to release resources.
+          - generic [ref=f12e704]:
+            - link "Colab paid products Link will open in a new tab" [ref=f12e705] [cursor=pointer]:
+              - /url: /signup?utm_source=footer&utm_medium=link&utm_campaign=footer_links
+              - text: Colab paid products
+            - text: "-"
+            - link "Cancel contracts here Link will open in a new tab" [ref=f12e706] [cursor=pointer]:
+              - /url: /cancel-subscription
+              - text: Cancel contracts here
+    - button "Toggle Gemini" [ref=f12e708] [cursor=pointer]
+    - region "Runtime status bar" [ref=f12e712]:
+      - generic [ref=f12e713]:
+        - generic:
+          - button "Variables" [ref=f12e716] [cursor=pointer]
+          - button "Terminal" [ref=f12e722] [cursor=pointer]
+      - generic [ref=f12e726]:
+        - button "10:48 AM" [ref=f12e1800] [cursor=pointer]
+        - button "T4 (Python 3)" [ref=f12e737] [cursor=pointer]
+  - generic [ref=f12e741]:
+    - alert
+    - alert

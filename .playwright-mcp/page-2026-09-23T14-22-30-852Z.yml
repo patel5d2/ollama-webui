@@ -1,0 +1,278 @@
+- generic [ref=f8e1]:
+  - generic [aria-hidden]:
+    - banner:
+      - generic:
+        - generic:
+          - link:
+            - /url: https://colab.research.google.com/
+        - generic:
+          - generic:
+            - search:
+              - combobox
+        - generic:
+          - generic:
+            - generic:
+              - button
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - button
+                    - generic:
+                      - generic:
+                        - button
+    - generic:
+      - main:
+        - generic:
+          - note:
+            - generic:
+              - generic:
+                - generic: Colab is now part of Google AI Plans.
+                - text: Get upgraded compute power and a suite of new AI tools all in one bundle.
+              - generic:
+                - link:
+                  - /url: /signup
+            - generic:
+              - button
+        - generic:
+          - generic:
+            - link:
+              - /url: https://colab.research.google.com/notebook#create=true
+          - generic:
+            - button
+        - generic:
+          - region:
+            - generic:
+              - heading [level=2]: Example notebooks
+              - generic:
+                - button
+            - list:
+              - listitem:
+                - generic:
+                  - generic:
+                    - link:
+                      - /url: https://colab.research.google.com/notebooks/intro.ipynb
+                      - text: Welcome to Colab
+                    - generic: Learn how to get started in Colab.
+              - listitem:
+                - generic:
+                  - generic:
+                    - link:
+                      - /url: https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_managed_agents.ipynb
+                      - text: Antigravity agent
+                    - generic: Explore the basics of building and using managed agents in Colab.
+              - listitem:
+                - generic:
+                  - generic:
+                    - link:
+                      - /url: https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Lyria.ipynb
+                      - text: Lyria
+                    - generic: Generate your own music with the powerful Lyria model.
+              - listitem:
+                - generic:
+                  - generic:
+                    - link:
+                      - /url: https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LiveTranslate.ipynb
+                      - text: Live translation
+                    - generic: Build real-time language translation tools directly in your notebook.
+        - generic:
+          - generic:
+            - region:
+              - generic:
+                - generic:
+                  - heading [level=2]: Recents
+                  - generic:
+                    - generic:
+                      - button
+                - table:
+                  - rowgroup:
+                    - row:
+                      - columnheader: Icon
+                      - columnheader: Title
+                      - columnheader: Last opened
+                  - rowgroup:
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/drive/1NKtOTJr4zH3mblqQqo17U6nrsLd7TBuy
+                          - text: Dharmin_Patel_sklearn.ipynb
+                      - cell: 10:02 AM
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/drive/1ZivHmAaqMoRPtthg2yP4eOmw4o6eG5wT
+                          - text: colab_evidence.ipynb
+                      - cell: September 14
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/drive/1cE2fy0UdVptiQHN9yhtHRTfyPpPvi08t
+                          - text: dharmin_patel.ipynb
+                      - cell: September 9
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/drive/1cwXDiSHV7FyD3kDkbFFoQC04Rj753nru
+                          - text: colab_drive_persistence.ipynb
+                      - cell: September 4
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/drive/1V0kKZ2HQbDCxgOg5FpuvXAfUENinAxyX
+                          - text: Module1_Fall2026.ipynb
+                      - cell: September 2
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/drive/19Xzkwi7I6R9cYyc9Cr_QTGEX0phmlr0b
+                          - text: Dharmin_Patel_Notebook2.ipynb
+                      - cell: September 1
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/drive/1gj1Rh7hRhohxJQStXo2y7pznakW87lsG
+                          - text: Dharmin_Patel_Notebook1.ipynb
+                      - cell: September 1
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/drive/1VEqP4FPXQffzA80TtoOcPhGt8Z0Ns_Xs
+                          - text: Module1_Fall2026.ipynb
+                      - cell: August 28
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/drive/1g1SJcnRmeE1sE3wtLxhrVNeqCKl_y-Sw
+                          - text: Untitled1.ipynb
+                      - cell: June 16
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/notebooks/intro.ipynb
+                          - text: Welcome To Colab
+                      - cell: June 16
+                    - row:
+                      - cell
+                      - cell:
+                        - link:
+                          - /url: https://colab.research.google.com/drive/1FGvD3R_TwcR784v5xJNmUWynGrBZDEY2
+                          - text: Untitled0.ipynb
+                      - cell: June 16
+              - generic:
+                - button
+          - generic:
+            - region:
+              - heading [level=2]: What's new
+              - list:
+                - listitem:
+                  - generic:
+                    - generic: Colab CLI
+                    - generic:
+                      - text: Learn how to bring the power of Colab straight to your terminal.
+                      - link:
+                        - /url: https://developers.googleblog.com/introducing-the-google-colab-cli/
+                        - text: Read the full announcement
+                      - text: .
+                - listitem:
+                  - generic:
+                    - generic: Visualization mode & fullscreen output sharing
+                    - generic:
+                      - text: Instantly generate interactive dashboards using natural language and share them as standalone pages with a single link.
+                      - link:
+                        - /url: https://medium.com/google-colab/announcing-visualization-mode-fullscreen-output-sharing-in-google-colab-5f53ffa51494
+                        - text: See it in action
+                      - text: .
+                - listitem:
+                  - generic:
+                    - generic: Colab MCP server
+                    - generic:
+                      - text: Colab's new MCP Server gives your local agents access to control the notebook development lifecycle.
+                      - link:
+                        - /url: https://github.com/googlecolab/colab-mcp
+                        - text: Explore the open-source release
+                      - text: .
+                - listitem:
+                  - generic:
+                    - generic: G4 GPU support
+                    - generic:
+                      - text: Colab now supports Nvidia RTX Pro 6000 Blackwell Server Edition GPUs on G4 machines for Colab Pro+ subscribers.
+                      - link:
+                        - /url: /signup?utm_source=homepage&utm_medium=link&utm_campaign=feature_announcement
+                        - text: Upgrade to Pro+
+                      - text: .
+              - generic:
+                - link:
+                  - /url: /notebooks/relnotes.ipynb
+          - generic:
+            - region:
+              - heading [level=2]: Downloads
+              - list:
+                - listitem:
+                  - generic:
+                    - generic:
+                      - link:
+                        - /url: https://marketplace.visualstudio.com/items?itemName=Google.colab
+                        - text: VS Code
+                - listitem:
+                  - generic:
+                    - generic:
+                      - link:
+                        - /url: https://www.jetbrains.com/help/pycharm/google-colab-support.html
+                        - text: PyCharm
+                - listitem:
+                  - generic:
+                    - generic:
+                      - link:
+                        - /url: https://github.com/googlecolab/google-colab-cli
+                        - text: Colab CLI
+                - listitem:
+                  - generic:
+                    - generic:
+                      - link:
+                        - /url: https://github.com/googlecolab/colab-mcp
+                        - text: Colab MCP
+      - contentinfo:
+        - generic:
+          - link:
+            - /url: /signup?utm_source=homepage&utm_medium=link&utm_campaign=footer_links
+            - text: Colab paid products
+          - text: •
+          - link:
+            - /url: /cancel-subscription
+            - text: Cancel contracts here
+  - dialog "Open notebook" [ref=f8e356]:
+    - generic [ref=f8e357]:
+      - heading "Open notebook" [level=2] [ref=f8e358]
+      - generic [ref=f8e362]:
+        - generic [ref=f8e363]:
+          - generic:
+            - generic:
+              - listitem [ref=f8e365] [cursor=pointer]:
+                - generic [ref=f8e366]: Examples
+              - listitem [ref=f8e372] [cursor=pointer]:
+                - generic [ref=f8e373]: Recent
+              - listitem [ref=f8e379] [cursor=pointer]:
+                - generic [ref=f8e380]: Google Drive
+              - listitem [ref=f8e386] [cursor=pointer]:
+                - generic [ref=f8e387]: GitHub
+              - listitem [ref=f8e393] [cursor=pointer]:
+                - generic [ref=f8e394]: Upload
+        - generic [ref=f8e402]:
+          - button "Browse" [ref=f8e406] [cursor=pointer]
+          - paragraph [ref=f8e407]: or drag a file here
+      - contentinfo [ref=f8e408]:
+        - button "Cancel" [ref=f8e412] [cursor=pointer]

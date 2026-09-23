@@ -1,0 +1,4 @@
+environment,model,parameter_size,quantization,prompt_id,condition,load_wall_s,load_server_s,answer_wall_s,server_total_s,generation_s,output_tokens,tokens_per_second,model_allocation_bytes,gpu_allocation_bytes,temperature,top_p,num_predict,done_reason
+colab-t4,qwen3:1.7b,2.0B,Q4_K_M,P1,temp-low,3.702837650000049,,1.0075261739999632,1.004836531,0.854902,94,109.95412339659984,1465615645,1465615645,0.1,0.9,192,stop
+colab-t4,qwen3:1.7b,2.0B,Q4_K_M,P1,temp-high,3.702837650000049,,0.8874424779999686,0.884601644,0.855982,98,114.4883887745303,1465615645,1465615645,1.2,0.9,192,stop
+colab-t4,qwen3:1.7b,2.0B,Q4_K_M,P1,tokens-64,3.702837650000049,,0.5836152289999745,0.58138489,0.552511,64,115.83479785922815,1465615645,1465615645,0.1,0.9,64,length

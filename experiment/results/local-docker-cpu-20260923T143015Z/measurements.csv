@@ -1,0 +1,6 @@
+environment,model,parameter_size,quantization,prompt_id,condition,load_wall_s,load_server_s,answer_wall_s,server_total_s,generation_s,output_tokens,tokens_per_second,model_allocation_bytes,gpu_allocation_bytes,temperature,top_p,num_predict,done_reason
+local-docker-cpu,qwen2.5-hf:0.5b,630.17M,Q4_K_M,P1,baseline,1.5543352499953471,,1.047085166996112,1.035072959,0.644119,80,124.20065236392654,550554827,0,0.2,0.9,192,stop
+local-docker-cpu,qwen2.5-hf:0.5b,630.17M,Q4_K_M,P2,baseline,1.5543352499953471,,1.8653390840045176,1.861753542,1.663868,192,115.39376921726965,550554827,0,0.2,0.9,192,length
+local-docker-cpu,qwen2.5-hf:0.5b,630.17M,Q4_K_M,P3,baseline,1.5543352499953471,,1.6000950419984292,1.597586834,1.387626,167,120.34943133092058,550554827,0,0.2,0.9,192,stop
+local-docker-cpu,qwen2.5-hf:0.5b,630.17M,Q4_K_M,P4,baseline,1.5543352499953471,,0.8499392500089016,0.846924875,0.51103,59,115.45310451441208,550554827,0,0.2,0.9,192,stop
+local-docker-cpu,qwen2.5-hf:0.5b,630.17M,Q4_K_M,P5,baseline,1.5543352499953471,,0.7752942079969216,0.772052375,0.495805,63,127.06608444852311,550554827,0,0.2,0.9,192,stop

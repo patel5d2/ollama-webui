@@ -1,0 +1,23 @@
+- generic [ref=e3]:
+  - generic [ref=e6]:
+    - link [ref=e7] [cursor=pointer]:
+      - /url: /exosphere/home
+    - generic [ref=e11]:
+      - link [ref=e12] [cursor=pointer]:
+        - /url: /exosphere/msglog?showdebug=false
+        - button "Messages" [ref=e13]
+      - link [ref=e19] [cursor=pointer]:
+        - /url: /exosphere/settings
+        - button "Settings" [ref=e20]
+      - link [ref=e27] [cursor=pointer]:
+        - /url: /exosphere/getsupport
+        - button "Get Support" [ref=e28]
+      - link [ref=e35] [cursor=pointer]:
+        - /url: /exosphere/helpabout
+        - button "About" [ref=e36]
+  - generic [ref=e43]:
+    - heading "Home" [level=2] [ref=e46]
+    - generic [ref=e50]:
+      - generic [ref=e51]: You are not logged into any allocations yet.
+      - link "Add allocation" [ref=e54] [cursor=pointer]:
+        - /url: /exosphere/login/openidconnect

@@ -1,0 +1,7 @@
+{
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "system_profiler SPHardwareDataType SPDisplaysDataType": "Hardware:\n\n    Hardware Overview:\n\n      Model Name: MacBook Pro\n      Model Identifier: Mac14,10\n      Model Number: MNW83LL/A\n      Chip: Apple M2 Pro\n      Total Number of Cores: 12 (8 Performance and 4 Efficiency)\n      Memory: 16 GB\n      System Firmware Version: 18000.120.36\n      OS Loader Version: 18000.120.36\n\nGraphics/Displays:\n\n    Apple M2 Pro:\n\n      Chipset Model: Apple M2 Pro\n      Type: GPU\n      Bus: Built-In\n      Total Number of Cores: 19\n      Vendor: Apple (0x106b)\n      Metal: Supported\n\n2026-09-23 10:20:42.346 system_profiler[50597:7662593] Error fetching hw.cpufamily: -1",
+  "sysctl hw.memsize hw.ncpu": "sysctl: sysctl fmt -1 1024 1: Operation not permitted",
+  "docker info --format CPUs={{.NCPU}} Memory={{.MemTotal}}": "CPUs=0 Memory=0\npermission denied while trying to connect to the docker API at unix:///Users/dharminpatel/.docker/run/docker.sock"
+}

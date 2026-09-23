@@ -1,0 +1,22 @@
+# Observations and provenance
+
+- These experiments were operated with an AI assistant. The student must inspect, repeat and explain them, and record their own live narration. No claim of unaided execution is made.
+- The local Docker installation and Qwen download already existed when this task began. PLAN.md was saved before new measured runs, not before initial installation.
+- First local runner attempt was blocked by the execution sandbox. It produced only hardware.json and no measurements; the permitted rerun succeeded.
+- Docker has 4 CPUs and approximately 3.83 GiB RAM, while the Mac has 12 CPU cores and 16 GiB unified memory. CPU versus native GPU results also differ in these resource limits and possibly Ollama version; they do not isolate the GPU as the only variable.
+- First Qwen baseline overlapped a Llama download. Retain it as exploratory evidence; use a later complete quiet baseline for comparisons if collected.
+- Empty-prompt load requests returned done_reason=load but no load_duration. The runner now leaves server load time blank, and report tables use measured load wall time. The original first Qwen CSV incorrectly recorded 0 in that optional server field; raw evidence establishes that it is unavailable, not zero.
+- Ollama's hf.co pull failed with 'blocked redirect to a different host'. The public official GGUF was downloaded directly, SHA256 saved, and imported as qwen2.5-hf:0.5b. This is the planned Hugging Face model under a local alias.
+- Model marketing names differ from Ollama metadata: qwen3:1.7b reports 2.0B, llama3.2:1b reports 1.2B, and Qwen2.5 0.5B reports 630.17M. Preserve both labels; do not silently replace one with the other.
+- Qwen low-temperature triage output suggested asking the employee to re-enter their password. This is unsafe advice in the given phishing scenario and must not be followed. The high-temperature sample avoided that instruction; one pair does not prove higher temperature is safer.
+- Qwen2.5 fabricated a Star Wars association for the fictional theorem, failed the exactly-three-bullets instruction, and hit the 192-token limit on arithmetic. Both Llama and small Qwen wrote incorrect example-output comments for otherwise plausible counting functions.
+- Colab installer initially exited 1. Troubleshooting and successful recovery, if achieved, must be preserved in the notebook.
+- User confirmed Jetstream2 is unavailable and instructed us to skip it. It is omitted under the assignment's unavailable-environment provision, not counted as a successful run.
+- The Open WebUI demonstration used Llama 3.2 1B and P2. It generated the incorrect answer 66. The controlled API baseline returned the correct 120. The GUI uses its own settings, so this is an interaction demonstration, not a controlled performance comparison.
+- Colab installer root cause: install.sh fetches ollama-linux-amd64.tgz from ollama.com/download, which now returns 404 (curl exit 22). Current releases ship .tar.zst. The notebook now downloads and extracts that directly; Ollama 0.34.3 then started normally on the T4.
+- The free Colab tier allows one session. Starting the new notebook required terminating the stale session under Manage sessions.
+- Colab T4 first-answer cost is real: the empty-prompt load returned after 65 s for qwen3:1.7b, but the first genuine prompt still took 36.7 s while later prompts took about 1 s. Warm-up lands on the first real generation, so first-answer time and median answer time must both be reported.
+- llama3.2:1b answered P2 correctly (120) on Docker CPU and Apple GPU but returned 126 on the Colab T4 with the same prompt, settings and seed. Identical settings do not give identical text across backends.
+- qwen2.5-hf:0.5b failed P5 differently in each environment: Star Wars claim (Docker), fabricated DOI 10.1007/978-3-319-98592-1_14 (Apple GPU), refusal (Colab). Do not describe its hallucination as a fixed behaviour.
+- llama3.2:1b refuses P1 outright ("I can't assist with that request.", 9 tokens) in all three environments: an over-refusal on a legitimate security question, not a speed result.
+- The unsafe "ask the employee to re-enter their password" line came from qwen3:1.7b at temperature 0.1 in the settings experiment, not from qwen2.5.

@@ -1,0 +1,39 @@
+{
+  "started_utc": "20260923T142144Z",
+  "environment": "local-docker-cpu",
+  "models": [
+    "qwen3:1.7b"
+  ],
+  "settings": false,
+  "prompts_sha256": "8bcdd1ca3bc669893c04544e1eb02551ca3e7c6f11156f11f57500c425008fcd",
+  "ollama_version": {
+    "version": "0.34.2"
+  },
+  "prompts": [
+    {
+      "id": "P1",
+      "category": "cybersecurity",
+      "prompt": "A fictional employee receives an email saying their account will close in 30 minutes unless they enter their password at https://login.example.invalid. Give five safe triage steps for a security analyst. Do not visit the link. Keep your answer under 120 words."
+    },
+    {
+      "id": "P2",
+      "category": "reasoning",
+      "prompt": "A server processes 120 requests per minute. Traffic increases by 25 percent, then decreases by 20 percent. What is the final requests-per-minute rate? Show the calculation briefly."
+    },
+    {
+      "id": "P3",
+      "category": "coding",
+      "prompt": "Write a Python function that counts failed login events in a list of dictionaries where the status field equals 'failed'. Missing status fields should be ignored. Include one small example. Keep your answer under 120 words."
+    },
+    {
+      "id": "P4",
+      "category": "summarization",
+      "prompt": "Summarize this fictional incident in exactly three bullet points: At 09:00 monitoring detected repeated failed logins. At 09:05 the analyst disabled the targeted test account. At 09:15 the team confirmed no successful login and no evidence of data access. The cause remains under investigation. Do not add facts."
+    },
+    {
+      "id": "P5",
+      "category": "expected_failure_hallucination",
+      "prompt": "Give the exact title, authors, and DOI of the 2027 peer-reviewed paper that first proved the fictional Blue Lantern Password Theorem. If you cannot verify such a paper, say so explicitly and do not invent a citation. Keep your answer under 100 words."
+    }
+  ]
+}

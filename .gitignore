@@ -1,0 +1,6 @@
+.env
+
+# ponytail: local model weights + vendored Ollama.app — too big for git (GitHub caps files at 100MB)
+experiment/native-models/
+experiment/native/
+experiment/models/

@@ -1,0 +1,163 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e5]:
+      - link "Colab home" [ref=e7] [cursor=pointer]:
+        - /url: https://colab.research.google.com/
+      - search [ref=e18]:
+        - combobox "Search notebooks" [ref=e20]
+      - generic [ref=e21]:
+        - button "Settings" [ref=e24] [cursor=pointer]
+        - generic [ref=e32]:
+          - button "Google apps" [ref=e36] [cursor=pointer]
+          - link "Sign in" [ref=e40] [cursor=pointer]:
+            - /url: https://accounts.google.com/ServiceLogin?passive=true&continue=https%3A%2F%2Fcolab.research.google.com%2F&ec=GAZAqQM
+  - generic [ref=e41]:
+    - main [ref=e42]:
+      - note [ref=e44]:
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - generic [ref=e48]: Colab is now part of Google AI Plans.
+            - text: Get upgraded compute power and a suite of new AI tools all in one bundle.
+          - link "Explore the Plans Link will open in a new tab" [ref=e51] [cursor=pointer]:
+            - /url: /signup
+            - generic [ref=e53]: Explore the Plans
+        - button "Dismiss" [ref=e55] [cursor=pointer]
+      - generic [ref=e59]:
+        - link "New notebook" [ref=e62] [cursor=pointer]:
+          - /url: https://colab.research.google.com/notebook#create=true
+        - button "Upload notebook" [ref=e69] [cursor=pointer]
+      - generic [ref=e73]:
+        - region [ref=e75]:
+          - generic [ref=e76]:
+            - heading "Example notebooks" [level=2] [ref=e77]
+            - button "See all example notebooks" [ref=e80] [cursor=pointer]:
+              - generic [ref=e82]: See all
+          - list [ref=e83]:
+            - listitem [ref=e84]:
+              - generic [ref=e86] [cursor=pointer]:
+                - generic:
+                  - link "Welcome to Colab" [ref=e88]:
+                    - /url: https://colab.research.google.com/notebooks/intro.ipynb
+                  - generic [ref=e89]: Learn how to get started in Colab.
+            - listitem [ref=e90]:
+              - generic [ref=e92] [cursor=pointer]:
+                - generic:
+                  - link "Antigravity agent" [ref=e94]:
+                    - /url: https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_managed_agents.ipynb
+                  - generic [ref=e95]: Explore the basics of building and using managed agents in Colab.
+            - listitem [ref=e96]:
+              - generic [ref=e98] [cursor=pointer]:
+                - generic:
+                  - link "Lyria" [ref=e100]:
+                    - /url: https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Lyria.ipynb
+                  - generic [ref=e101]: Generate your own music with the powerful Lyria model.
+            - listitem [ref=e102]:
+              - generic [ref=e104] [cursor=pointer]:
+                - generic:
+                  - link "Live translation" [ref=e106]:
+                    - /url: https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LiveTranslate.ipynb
+                  - generic [ref=e107]: Build real-time language translation tools directly in your notebook.
+            - listitem [ref=e108]:
+              - generic [ref=e110] [cursor=pointer]:
+                - generic:
+                  - link "Markdown Guide" [ref=e112]:
+                    - /url: https://colab.research.google.com/notebooks/markdown_guide.ipynb
+                  - generic [ref=e113]: Use Markdown to add rich text to your notebook.
+            - listitem [ref=e114]:
+              - generic [ref=e116] [cursor=pointer]:
+                - generic:
+                  - link "Charts in Colab" [ref=e118]:
+                    - /url: https://colab.research.google.com/notebooks/charts.ipynb
+                  - generic [ref=e119]: Transform complex data into interactive visualizations.
+            - listitem [ref=e120]:
+              - generic [ref=e122] [cursor=pointer]:
+                - generic:
+                  - 'link "External data: Drive, Sheets, and Cloud Storage" [ref=e124]':
+                    - /url: https://colab.research.google.com/notebooks/io.ipynb
+                  - generic [ref=e125]: Import data from external sources into your notebook.
+            - listitem [ref=e126]:
+              - generic [ref=e128] [cursor=pointer]:
+                - generic:
+                  - link "Getting started with BigQuery" [ref=e136]:
+                    - /url: https://colab.research.google.com/notebooks/bigquery.ipynb
+                  - generic [ref=e137]: Analyze large datasets with BigQuery from within Colab.
+            - listitem [ref=e138]:
+              - generic [ref=e140] [cursor=pointer]:
+                - generic:
+                  - link "Forms" [ref=e142]:
+                    - /url: https://colab.research.google.com/notebooks/forms.ipynb
+                  - generic [ref=e143]: Create and customize interactive forms to easily parameterize code cells.
+        - region [ref=e145]:
+          - heading "What's new" [level=2] [ref=e146]
+          - list "What's new" [ref=e147]:
+            - listitem [ref=e148]:
+              - generic [ref=e150]:
+                - generic [ref=e151]: Colab CLI
+                - generic [ref=e152]:
+                  - text: Learn how to bring the power of Colab straight to your terminal.
+                  - link "Read the full announcement Link will open in a new tab" [ref=e153] [cursor=pointer]:
+                    - /url: https://developers.googleblog.com/introducing-the-google-colab-cli/
+                    - text: Read the full announcement
+                  - text: .
+            - listitem [ref=e154]:
+              - generic [ref=e156]:
+                - generic [ref=e157]: Visualization mode & fullscreen output sharing
+                - generic [ref=e158]:
+                  - text: Instantly generate interactive dashboards using natural language and share them as standalone pages with a single link.
+                  - link "See it in action Link will open in a new tab" [ref=e159] [cursor=pointer]:
+                    - /url: https://medium.com/google-colab/announcing-visualization-mode-fullscreen-output-sharing-in-google-colab-5f53ffa51494
+                    - text: See it in action
+                  - text: .
+            - listitem [ref=e160]:
+              - generic [ref=e162]:
+                - generic [ref=e163]: Colab MCP server
+                - generic [ref=e164]:
+                  - text: Colab's new MCP Server gives your local agents access to control the notebook development lifecycle.
+                  - link "Explore the open-source release Link will open in a new tab" [ref=e165] [cursor=pointer]:
+                    - /url: https://github.com/googlecolab/colab-mcp
+                    - text: Explore the open-source release
+                  - text: .
+            - listitem [ref=e166]:
+              - generic [ref=e168]:
+                - generic [ref=e169]: G4 GPU support
+                - generic [ref=e170]:
+                  - text: Colab now supports Nvidia RTX Pro 6000 Blackwell Server Edition GPUs on G4 machines for Colab Pro+ subscribers.
+                  - link "Upgrade to Pro+ Link will open in a new tab" [ref=e171] [cursor=pointer]:
+                    - /url: /signup?utm_source=homepage&utm_medium=link&utm_campaign=feature_announcement
+                    - text: Upgrade to Pro+
+                  - text: .
+          - link "See more about what's new in Colab Link will open in a new tab" [ref=e174] [cursor=pointer]:
+            - /url: /notebooks/relnotes.ipynb
+            - generic [ref=e176]: See more...
+        - region [ref=e178]:
+          - heading "Downloads" [level=2] [ref=e179]
+          - list [ref=e180]:
+            - listitem [ref=e181]:
+              - link "VS Code Link will open in a new tab" [ref=e194] [cursor=pointer]:
+                - /url: https://marketplace.visualstudio.com/items?itemName=Google.colab
+                - text: VS Code
+            - listitem [ref=e195]:
+              - link "PyCharm Link will open in a new tab" [ref=e207] [cursor=pointer]:
+                - /url: https://www.jetbrains.com/help/pycharm/google-colab-support.html
+                - text: PyCharm
+            - listitem [ref=e208]:
+              - link "Colab CLI Link will open in a new tab" [ref=e212] [cursor=pointer]:
+                - /url: https://github.com/googlecolab/google-colab-cli
+                - text: Colab CLI
+            - listitem [ref=e213]:
+              - link "Colab MCP Link will open in a new tab" [ref=e217] [cursor=pointer]:
+                - /url: https://github.com/googlecolab/colab-mcp
+                - text: Colab MCP
+    - contentinfo [ref=e218]:
+      - generic [ref=e219]:
+        - link "Colab paid products Link will open in a new tab" [ref=e220] [cursor=pointer]:
+          - /url: /signup?utm_source=homepage&utm_medium=link&utm_campaign=footer_links
+          - text: Colab paid products
+        - text: •
+        - link "Cancel contracts here Link will open in a new tab" [ref=e221] [cursor=pointer]:
+          - /url: /cancel-subscription
+          - text: Cancel contracts here
+        - text: •
+        - link "Cancel Google AI contracts here Link will open in a new tab" [ref=e222] [cursor=pointer]:
+          - /url: https://support.google.com/googleone/answer/9056360
+          - text: Cancel Google AI contracts here
