@@ -67,21 +67,29 @@ for (env, model), (run, rows) in sorted(chosen_settings.items()):
 
 (ROOT / 'RESULTS.md').write_text('\n'.join(lines) + '\n')
 
-# Chart: generation speed per model per environment.
-models = sorted({m for _, m in summary})
-envs = sorted({e for e, _ in summary})
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4.5))
+# Chart: generation speed per model per environment, smallest model first.
+ENV_ORDER = ['local-docker-cpu', 'local-metal-gpu', 'colab-t4', 'jetstream2-cpu-fallback', 'jetstream2-a100']
+COLORS = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4']  # dataviz reference slots 1-5, validated
+SIZE = {'qwen2.5-hf:0.5b': 0.5, 'llama3.2:1b': 1, 'qwen3:1.7b': 1.7, 'qwen3:14b': 14, 'qwen3:32b': 32}
+models = sorted({m for _, m in summary}, key=lambda m: SIZE.get(m, 99))
+envs = [e for e in ENV_ORDER if any(e == k[0] for k in summary)]
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4.8))
 width = 0.8 / len(envs)
 for i, env in enumerate(envs):
     xs = [j + i * width for j in range(len(models))]
-    ax1.bar(xs, [summary.get((env, m), {}).get('tps', 0) for m in models], width, label=env)
-    ax2.bar(xs, [summary.get((env, m), {}).get('answer', 0) for m in models], width, label=env)
+    style = dict(width=width, label=env, color=COLORS[i], edgecolor='#fcfcfb', linewidth=1, zorder=2)
+    ax1.bar(xs, [summary.get((env, m), {}).get('tps', 0) for m in models], **style)
+    ax2.bar(xs, [summary.get((env, m), {}).get('answer', 0) for m in models], **style)
 for ax, title, ylab in ((ax1, 'Generation speed (higher is better)', 'median tokens/s'),
-                        (ax2, 'Answer latency (lower is better)', 'median seconds per prompt')):
+                        (ax2, 'Answer latency (lower is better, log scale)', 'median seconds per prompt')):
     ax.set_xticks([j + width * (len(envs) - 1) / 2 for j in range(len(models))])
     ax.set_xticklabels(models, fontsize=8)
-    ax.set_title(title, fontsize=10); ax.set_ylabel(ylab, fontsize=9); ax.legend(fontsize=8)
-fig.suptitle('Same five prompts, same settings, three environments', fontsize=11)
+    ax.set_title(title, fontsize=10); ax.set_ylabel(ylab, fontsize=9)
+    ax.grid(axis='y', color='#e4e4e0', linewidth=0.6, zorder=0)
+    ax.spines[['top', 'right']].set_visible(False)
+ax2.set_yscale('log')
+ax1.legend(fontsize=8, frameon=False)
+fig.suptitle('Same five prompts, same settings, every environment (missing bar = not run there)', fontsize=11)
 fig.tight_layout()
 fig.savefig(ROOT / 'comparison.png', dpi=150)
 print((ROOT / 'RESULTS.md').read_text())

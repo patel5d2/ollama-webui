@@ -5,7 +5,12 @@ import csv, json, pathlib, statistics, html
 ROOT = pathlib.Path(__file__).resolve().parent
 ENV_LABEL = {'local-docker-cpu': 'Own computer — Docker (CPU only)',
              'local-metal-gpu': 'Own computer — native macOS (Apple GPU)',
-             'colab-t4': 'Google Colab — free T4 GPU'}
+             'colab-t4': 'Google Colab — free T4 GPU',
+             'jetstream2-cpu-fallback': 'Jetstream2 VM — before the fix (GPU not detected, CPU only)',
+             'jetstream2-a100': 'Jetstream2 VM — NVIDIA A100 vGPU (20 GiB)'}
+SHORT = {'local-docker-cpu': 'Mac — Docker CPU', 'local-metal-gpu': 'Mac — Apple GPU', 'colab-t4': 'Colab — T4',
+         'jetstream2-cpu-fallback': 'Jetstream2 — CPU fallback', 'jetstream2-a100': 'Jetstream2 — A100'}
+MODELS = ['qwen3:1.7b', 'llama3.2:1b', 'qwen2.5-hf:0.5b', 'qwen3:14b', 'qwen3:32b']
 
 def rows_of(run):
     return list(csv.DictReader((ROOT/'results'/run/'measurements.csv').open()))
@@ -16,8 +21,11 @@ def num(v):
 RUNS = {'local-docker-cpu': ['local-docker-cpu-20260923T142144Z', 'local-docker-cpu-20260923T142758Z',
                              'local-docker-cpu-20260923T143015Z'],
         'local-metal-gpu': ['local-metal-gpu-20260923T144322Z'],
-        'colab-t4': ['colab-t4-20260923T150703Z']}
-SETTINGS_RUNS = ['local-docker-cpu-20260923T143025Z', 'colab-t4-20260923T151034Z']
+        'colab-t4': ['colab-t4-20260923T150703Z'],
+        'jetstream2-cpu-fallback': ['jetstream2-cpu-fallback-20261012T220822Z', 'jetstream2-cpu-fallback-20261012T220947Z'],
+        'jetstream2-a100': ['jetstream2-a100-20261012T221227Z', 'jetstream2-a100-20261012T221440Z']}
+SETTINGS_RUNS = ['local-docker-cpu-20260923T143025Z', 'colab-t4-20260923T151034Z',
+                 'jetstream2-cpu-fallback-20261012T220931Z', 'jetstream2-a100-20261012T221437Z']
 
 baseline = []
 for env, runs in RUNS.items():
@@ -35,14 +43,14 @@ def table(headers, body_rows, cls=''):
 # Per prompt, every environment and model.
 per_prompt = table(
     ['Environment', 'Model', 'Params', 'Quant', 'Prompt', 'Answer s', 'Tokens/s', 'Output tokens', 'Stop reason'],
-    [[ENV_LABEL[r['environment']].split('—')[1].strip(), r['model'], r['parameter_size'], r['quantization'],
+    [[SHORT[r['environment']], r['model'], r['parameter_size'], r['quantization'],
       r['prompt_id'], f"{num(r['answer_wall_s']):.2f}", f"{num(r['tokens_per_second']):.1f}",
       r['output_tokens'], r['done_reason']] for r in baseline])
 
 # Summary per environment and model.
 summary_rows, summary = [], {}
 for env in RUNS:
-    for model in ['qwen3:1.7b', 'llama3.2:1b', 'qwen2.5-hf:0.5b']:
+    for model in MODELS:
         rs = [r for r in baseline if r['environment'] == env and r['model'] == model]
         if not rs:
             continue
@@ -52,7 +60,7 @@ for env in RUNS:
                    first=max(ans), alloc=num(rs[0]['model_allocation_bytes']) or 0,
                    vram=num(rs[0]['gpu_allocation_bytes']) or 0)
         summary[(env, model)] = rec
-        summary_rows.append([ENV_LABEL[env].split('—')[1].strip(), model, rs[0]['parameter_size'], rs[0]['quantization'],
+        summary_rows.append([SHORT[env], model, rs[0]['parameter_size'], rs[0]['quantization'],
                              f"{rec['load']:.2f}", f"{rec['answer']:.2f}", f"{rec['tps']:.1f}",
                              f"{rec['alloc']/2**20:.0f}", f"{rec['vram']/2**20:.0f}"])
 summary_table = table(['Environment', 'Model', 'Params', 'Quant', 'Load s', 'Median answer s',
@@ -61,7 +69,7 @@ summary_table = table(['Environment', 'Model', 'Params', 'Quant', 'Load s', 'Med
 settings_rows = []
 for run in SETTINGS_RUNS:
     for r in rows_of(run):
-        settings_rows.append([ENV_LABEL[r['environment']].split('—')[1].strip(), r['condition'], r['temperature'],
+        settings_rows.append([SHORT[r['environment']], r['condition'], r['temperature'],
                               r['num_predict'], f"{num(r['answer_wall_s']):.2f}", f"{num(r['tokens_per_second']):.1f}",
                               r['output_tokens'], r['done_reason']])
 settings_table = table(['Environment', 'Condition', 'Temperature', 'num_predict', 'Answer s', 'Tokens/s',
@@ -71,36 +79,49 @@ def speed(env, model):
     return summary[(env, model)]['tps']
 
 ratio_rows = []
-for model in ['qwen3:1.7b', 'llama3.2:1b', 'qwen2.5-hf:0.5b']:
-    cpu, gpu, t4 = speed('local-docker-cpu', model), speed('local-metal-gpu', model), speed('colab-t4', model)
-    ratio_rows.append([model, f'{cpu:.1f}', f'{gpu:.1f}', f'{t4:.1f}', f'{gpu/cpu:.2f}×', f'{t4/cpu:.2f}×'])
-ratio_table = table(['Model', 'Docker CPU tokens/s', 'Apple GPU tokens/s', 'Colab T4 tokens/s',
-                     'Apple GPU vs CPU', 'T4 vs CPU'], ratio_rows)
+for model in MODELS:
+    v = [summary.get((e, model), {}).get('tps') for e in RUNS]
+    cpu, a100 = v[0], v[4]
+    ratio_rows.append([model] + [f'{x:.1f}' if x else '—' for x in v] +
+                      [f'{a100/cpu:.1f}×' if cpu else '—', f'{a100/v[3]:.1f}×' if v[3] else '—'])
+ratio_table = table(['Model'] + [f'{SHORT[e]} tokens/s' for e in RUNS] +
+                    ['A100 vs Mac Docker CPU', 'A100 vs same VM on CPU'], ratio_rows)
 
 
 qual_table = table(
-    ['Prompt', 'What it tests', 'qwen3:1.7b (2.0B)', 'llama3.2:1b (1.2B)', 'qwen2.5-hf:0.5b (630M, Hugging Face)'],
+    ['Prompt', 'What it tests', 'qwen3:1.7b (2.0B)', 'llama3.2:1b (1.2B)', 'qwen2.5-hf:0.5b (630M, Hugging Face)',
+     'qwen3:14b (14.8B) and qwen3:32b (32.8B) — Jetstream2 only'],
     [['P1', 'Cybersecurity triage (phishing)',
-      'Five ordered steps including "avoid entering any password". Usable.',
-      '<b>Refused entirely</b>: "I can\'t assist with that request." — 9 tokens, in all three environments.',
-      'Five steps, but they restate the email rather than triage it; no unsafe instruction.'],
+      'Five ordered steps; usable in every backend.',
+      '<b>Refused entirely</b>: "I can\'t assist with that request." — 9 tokens, on all five backends.',
+      'Five steps that mostly restate the email rather than triage it; no unsafe instruction.',
+      'Both usable. The 32B was the most complete: report through the incident system, quarantine the email, '
+      'block the sender domain, warn the employee not to provide credentials.'],
      ['P2', 'Arithmetic: 120 → +25% → −20% (expected 120)',
-      'Correct (120) in all three environments.',
-      'Correct (120) on Docker CPU and Apple GPU, <b>wrong (126) on the Colab T4</b> — same prompt, settings and seed.',
-      '<b>Never reached an answer</b>: hit the 192-token limit (stop reason <code>length</code>) mid-calculation.'],
+      'Correct (120) on every backend.',
+      'Correct (120) on Docker CPU, Apple GPU, Jetstream2 CPU and the A100; <b>wrong (126) only on the Colab T4</b> — '
+      'same prompt, settings and seed.',
+      '<b>Never reached an answer</b>: hit the 192-token limit (stop reason <code>length</code>) mid-calculation, everywhere.',
+      'Both correct (120), in under 100 tokens.'],
      ['P3', 'Python: count failed logins, ignore missing keys',
       'Correct function and a matching example.',
-      'Correct function, but the example comment claims <code>Output: 2</code> while its own example list holds three failed entries.',
-      'Correct function using <code>if "status" in event</code>.'],
+      'Correct function, but on 4 of 5 backends the example list holds three failed entries while the comment claims '
+      '<code>Output: 2</code>. Only the Jetstream2 CPU run happened to write a two-entry example.',
+      'Correct function using <code>if "status" in event</code>.',
+      'Both use <code>e.get(\'status\')</code> — the most robust form — and include an empty <code>{}</code> in the '
+      'example to prove a missing key is ignored. Stated outputs are correct.'],
      ['P4', 'Summarise in exactly three bullets, add nothing',
       'Exactly three bullets everywhere.',
       'Exactly three bullets everywhere.',
-      '<b>Zero bullets</b> — reproduced the paragraph instead, in all three environments.'],
+      '<b>Zero bullets</b> — reproduced the paragraph instead, on every backend.',
+      'Both exactly three bullets with no invented facts.'],
      ['P5', 'Deliberate failure test: fake 2027 paper',
-      'Refused and stated it cannot verify such a paper — the desired behaviour, in all three environments.',
+      'Refused and stated it cannot verify such a paper, everywhere.',
       'Refused, but with a bare "I can\'t provide that information".',
-      '<b>Three different failures from one model</b>: claimed the theorem is from Star Wars (Docker CPU); '
-      '<b>fabricated a title and the DOI 10.1007/978-3-319-98592-1_14</b> (Apple GPU); refused (Colab T4).']])
+      '<b>Fails differently by backend</b>: claimed the theorem is from Star Wars (Docker CPU <i>and</i> Jetstream2 CPU); '
+      '<b>fabricated a title and the DOI 10.1007/978-3-319-98592-1_14</b> (Apple GPU); an identical refusal on both NVIDIA '
+      'GPUs (Colab T4 and A100).',
+      'Both refused explicitly; the 14B: "I cannot provide a fabricated citation."']])
 
 env_table = table(
     ['Environment', 'Processor', 'Memory', 'GPU', 'Ollama', 'How hardware was checked'],
@@ -110,10 +131,14 @@ env_table = table(
      ['Own computer — native macOS (Apple GPU)', 'Apple M2 Pro, 12 cores', '16 GB unified', 'Apple M2 Pro, 19-core GPU, Metal 4', '0.34.3',
       '<code>system_profiler</code>, <code>sysctl</code>'],
      ['Google Colab — free T4 GPU', 'Intel Xeon @ 2.00 GHz, 2 vCPU', '12.7 GiB', 'NVIDIA Tesla T4, 15360 MiB, driver 580.82.07, CUDA 13.0', '0.34.3',
-      '<code>lscpu</code>, <code>free -b</code>, <code>nvidia-smi</code>']])
+      '<code>lscpu</code>, <code>free -b</code>, <code>nvidia-smi</code>'],
+     ['Jetstream2 VM (Ubuntu 24.04, Indiana University)', 'AMD EPYC-Milan, 16 vCPU (KVM)', '58.8 GiB, no swap; 58 GB disk',
+      'NVIDIA GRID A100X-20C — a 20 GiB virtual slice of an A100, driver 580.159.03, CUDA 13.0', '0.40.3',
+      '<code>lscpu</code>, <code>free -b</code>, <code>nvidia-smi</code>, <code>nvidia-smi -q</code>']])
 
 gpu_gain = summary[('local-metal-gpu', 'qwen3:1.7b')]['tps'] / summary[('local-docker-cpu', 'qwen3:1.7b')]['tps']
 t4_gain = summary[('colab-t4', 'qwen3:1.7b')]['tps'] / summary[('local-docker-cpu', 'qwen3:1.7b')]['tps']
+a100_first = summary[('jetstream2-a100', 'qwen3:1.7b')]['first']
 colab_first = summary[('colab-t4', 'qwen3:1.7b')]['first']
 colab_load = summary[('colab-t4', 'qwen3:1.7b')]['load']
 mac_load = summary[('local-metal-gpu', 'qwen3:1.7b')]['load']
@@ -139,7 +164,8 @@ HTML = f"""<!doctype html><html><head><meta charset="utf-8"><title>Running LLMs 
 </style></head><body>
 
 <h1>Running LLMs in Different Environments</h1>
-<p><b>Mini project — local machine, Google Colab, and a cloud server.</b> Prepared 23 September 2026.</p>
+<p><b>Mini project — local machine, Google Colab, and a cloud server.</b> Prepared 23 September 2026;
+Jetstream2 runs added 12 October 2026, after class access was granted on 10 October.</p>
 
 <div class="title-box">
 <p><b>Video (5–10 minutes, live screens):</b> <b style="color:#b00">&lt;paste your video link here before submitting&gt;</b></p>
@@ -179,7 +205,13 @@ This is an allocation snapshot, <i>not</i> peak RAM.</li>
 
 <h3>What changed after the plan was written, and why</h3>
 <ul>
-<li><b>Jetstream2 was unavailable</b>, so the third environment is the free Colab T4 only. This is recorded as an omission, not as a result.</li>
+<li><b>Jetstream2 access arrived late</b> (Saturday 10 October), after the Mac and Colab runs were finished. The Jetstream2 runs used
+the unchanged <code>run.py</code> and <code>prompts.json</code>, downloaded from the project repository onto the VM; the prompt SHA-256 in the
+Jetstream2 manifests is identical to the earlier runs.</li>
+<li><b>Larger models, as planned:</b> the plan said to try a larger Qwen model on Jetstream2. Two were run, <code>qwen3:14b</code> and
+<code>qwen3:32b</code>, the second deliberately bigger than the 20 GiB GPU.</li>
+<li><b>An unplanned before/after row:</b> the first Jetstream2 runs silently used the CPU because of a permissions problem (section 10).
+Those numbers were kept and labelled <code>jetstream2-cpu-fallback</code>, so the same VM is measured with and without its GPU.</li>
 <li><b>A fourth environment was added:</b> the same Mac also runs Ollama natively on the Apple GPU, so CPU-only and GPU rows exist for the same machine.</li>
 <li><b>Hugging Face model:</b> <code>ollama pull hf.co/...</code> failed, so the GGUF was downloaded directly and imported under the alias <code>qwen2.5-hf:0.5b</code> (section 10).</li>
 <li><b>Server-reported load time</b> was dropped: empty-prompt load requests return <code>done_reason=load</code> with no <code>load_duration</code> field, so the measured wall time is used and the server field is left blank rather than recorded as zero.</li>
@@ -190,15 +222,17 @@ This is an allocation snapshot, <i>not</i> peak RAM.</li>
 <p>Hardware was captured by the runner itself into <code>hardware.json</code> inside every result folder, using the commands in the
 last column, so the hardware record and the timings always belong to the same run.</p>
 <div class="note"><b>Fair-comparison caveat.</b> The Docker container is limited to 4 CPUs and 3.83 GiB, while the same Mac natively
-sees 12 cores and 16 GiB, and the Docker run used Ollama 0.34.2 against 0.34.3 elsewhere. The CPU-versus-GPU rows therefore
-differ by more than the GPU alone.</div>
+sees 12 cores and 16 GiB, and the Docker run used Ollama 0.34.2 against 0.34.3 elsewhere. Jetstream2 ran Ollama 0.40.3, three weeks
+newer. The CPU-versus-GPU rows therefore differ by more than the GPU alone. The cleanest comparison in this report is Jetstream2 CPU
+fallback versus Jetstream2 A100: same VM, same Ollama, same day, only the GPU differs.</div>
 """
 
 HTML += f"""
 <h2>3. Task 1 — Two hosting tools, one of them graphical</h2>
 <ol>
-<li><b>Ollama</b> — the model server, used in all three environments (Docker container on the Mac, native macOS build, and a
-Linux install on the Colab VM). Driven from the command line and from its HTTP API.</li>
+<li><b>Ollama</b> — the model server, used in all three environments (Docker container on the Mac, native macOS build, a manual
+Linux install on the Colab VM, and the official Linux installer with a systemd service on Jetstream2). Driven from the command line and
+from its HTTP API.</li>
 <li><b>Open WebUI</b> — the browser interface at <code>http://localhost:3000</code>, talking to the same Docker Ollama container.
 This is the graphical tool.</li>
 </ol>
@@ -210,26 +244,37 @@ ollama      Up 56 minutes (healthy)</pre>
 <figcaption><b>Task 1 / Task 5 — Screenshot 1.</b> Ollama installed and answering on the Colab T4:
 <code>{{"version":"0.34.3"}}</code> from the local API, the Hugging Face GGUF hash check printing
 <code>matches Mac download: True</code>, and both measurement runs finishing with <code>returncode=0</code>.</figcaption></figure>
+<figure><img src="evidence/jetstream2-ollama-ps-100pct-gpu.png">
+<figcaption><b>Task 1 / Task 5 — Screenshot 2.</b> Ollama on the Jetstream2 VM after the GPU fix: <code>ollama ps</code> reports
+<code>qwen3:1.7b</code> at <b>100% GPU</b>, <code>nvidia-smi</code> shows 1892 MiB in use on the A100, and the server log is mid-request
+with the fixed sampler settings (<code>top_p 0.900</code>, <code>temp 0.200</code>). Before the fix the same command said
+<code>100% CPU</code> (section 10).</figcaption></figure>
 <div class="note"><b>Screenshot to add yourself:</b> Open WebUI at <code>localhost:3000</code> with a model selected and an answer on
 screen (it sits behind a sign-in, so it is not captured here). The same window is shown live in the video.</div>
 
-<h2>4. Task 2 — Three models, two families, three sizes, one from Hugging Face</h2>
+<h2>4. Task 2 — Five models, two families, five sizes, one from Hugging Face</h2>
 <table><thead><tr><th>Model</th><th>Family</th><th>Marketing size</th><th>Reported parameters</th><th>Quantization</th><th>Disk</th><th>Source</th></tr></thead><tbody>
 <tr><td><code>qwen3:1.7b</code></td><td>Qwen</td><td>1.7B</td><td>2.0B</td><td>Q4_K_M</td><td>1.4 GB</td><td>Ollama library</td></tr>
 <tr><td><code>llama3.2:1b</code></td><td>Llama</td><td>1B</td><td>1.2B</td><td>Q8_0</td><td>1.3 GB</td><td>Ollama library</td></tr>
 <tr><td><code>qwen2.5-hf:0.5b</code></td><td>Qwen</td><td>0.5B</td><td>630.17M</td><td>Q4_K_M</td><td>491 MB</td><td><b>Hugging Face</b>: <code>Qwen/Qwen2.5-0.5B-Instruct-GGUF</code></td></tr>
+<tr><td><code>qwen3:14b</code></td><td>Qwen</td><td>14B</td><td>14.8B</td><td>Q4_K_M</td><td>9.3 GB</td><td>Ollama library — Jetstream2 only</td></tr>
+<tr><td><code>qwen3:32b</code></td><td>Qwen</td><td>32B</td><td>32.8B</td><td>Q4_K_M</td><td>20 GB</td><td>Ollama library — Jetstream2 only</td></tr>
 </tbody></table>
+<p>The two large models were run only on Jetstream2: they are the reason for having a server with a 20 GiB GPU, and the Mac and
+Colab runs had finished before access arrived.</p>
 <p>The marketing name and the metadata disagree for every model — <code>qwen3:1.7b</code> reports 2.0B parameters and
 <code>llama3.2:1b</code> reports 1.2B — so both labels are kept rather than silently replacing one with the other.</p>
 <p><b>Hugging Face provenance.</b> The exact file <code>qwen2.5-0.5b-instruct-q4_k_m.gguf</code> was downloaded from the official
 repository and imported through a <code>Modelfile</code> under the alias <code>qwen2.5-hf:0.5b</code>. Its SHA-256 is
 <code>74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db</code>, and the Colab notebook recomputes that hash
-on the file it downloads itself and prints <code>matches Mac download: True</code> (Screenshot 1) — so the Mac and the T4 ran
-byte-identical weights.</p>
+on the file it downloads itself and prints <code>matches Mac download: True</code> (Screenshot 1), and on Jetstream2
+<code>sha256sum</code> printed the same value (<code>evidence/jetstream2-huggingface-sha256.txt</code>) — so the Mac, the T4 and the A100
+ran byte-identical weights.</p>
 
 <h2>5. Task 3 — Four ways of talking to the models</h2>
 <table><thead><tr><th>Method</th><th>What was done</th><th>Evidence</th></tr></thead><tbody>
-<tr><td>Command line</td><td><code>ollama list</code>, <code>ollama pull</code>, <code>ollama create</code> on the Mac and in Colab</td><td>Output below; notebook cells 3–4</td></tr>
+<tr><td>Command line</td><td><code>ollama list</code>, <code>ollama pull</code>, <code>ollama create</code> on the Mac and in Colab;
+<code>ollama pull</code>, <code>ollama create</code>, <code>ollama ps</code> in a terminal on the Jetstream2 web desktop</td><td>Output below; notebook cells 3–4; Screenshots 2–3</td></tr>
 <tr><td>Python script</td><td><code>run.py</code> — the measurement runner; standard library only</td><td><code>results/*/measurements.csv</code></td></tr>
 <tr><td>Direct HTTP API</td><td><code>POST /api/generate</code> (non-streaming), plus <code>/api/show</code>, <code>/api/ps</code>, <code>/api/version</code></td><td>Full request and response bodies in <code>answer-*.json</code></td></tr>
 <tr><td>Graphical interface</td><td>Open WebUI chat against the same container</td><td>Live in the video</td></tr>
@@ -249,12 +294,15 @@ and then the second setting, <code>num_predict</code> (the maximum answer length
 {settings_table}
 <h3>What actually changed in the text</h3>
 <ul>
-<li><b>Temperature 0.1</b> produced step 2: <i>"Confirm the request – Ask the employee to re-enter their password for verification."</i>
+<li><b>Temperature 0.1 on Docker CPU</b> produced step 2: <i>"Confirm the request – Ask the employee to re-enter their password for verification."</i>
 In a phishing scenario that is <b>unsafe advice</b>, and it appeared at the <i>low</i>, supposedly "safe" temperature.</li>
-<li><b>Temperature 1.2</b> produced step 5: <i>"Do not enter password – Avoid revealing any credentials to prevent account compromise."</i>
+<li><b>Temperature 1.2 on Docker CPU</b> produced step 5: <i>"Do not enter password – Avoid revealing any credentials to prevent account compromise."</i>
 — the opposite, and the better answer.</li>
-<li><b>num_predict 64</b> stopped mid-sentence in step 3 with <code>done_reason=length</code>. Nothing warns the reader that the
-answer was cut off; only the stop reason reveals it.</li>
+<li><b>The same temperature-0.1 request on the other three backends</b> (Colab T4, Jetstream2 CPU, Jetstream2 A100) did <i>not</i> produce the
+password instruction. The unsafe answer is reproducible only on the backend that produced it, which is exactly why one sample proves nothing.
+On the A100 the two temperatures gave differently ordered but equally safe five-step lists.</li>
+<li><b>num_predict 64</b> stopped mid-sentence on every backend (on the A100 at <i>"4. Report the incident"</i>) with
+<code>done_reason=length</code>. Nothing warns the reader that the answer was cut off; only the stop reason reveals it.</li>
 </ul>
 <div class="note"><b>Does this matter for security work?</b> Yes, in three ways. First, low temperature buys consistency, not
 correctness — one sample is not evidence that either setting is safer, and the low-temperature answer here was the dangerous one.
@@ -268,12 +316,21 @@ keep a human between the model and the analyst.</div>
 <h3>Generation speed, and what the GPUs actually bought</h3>
 {ratio_table}
 <figure><img src="comparison.png">
-<figcaption><b>Chart 1.</b> Median generation speed and median answer latency for the same five prompts, same settings, in all three
-environments. Generated by <code>analyze.py</code> directly from the measurement CSVs.</figcaption></figure>
+<figcaption><b>Chart 1.</b> Median generation speed and median answer latency for the same five prompts and settings, on every
+backend in all three environments. The 14B and 32B models have bars only for Jetstream2, the only place they were run. Latency is on
+a log scale because it spans 0.15 s to 16 s. Generated by <code>analyze.py</code> directly from the measurement CSVs; the exact values are
+in the tables above and below.</figcaption></figure>
 <div class="note"><b>Read the load column carefully.</b> On Colab the first real answer for each model took
 {colab_first:.0f} s even though the empty-prompt load request had already returned after {colab_load:.0f} s, because the
 T4 finishes warming up on the first genuine generation. On the Mac's own GPU the same model loaded in {mac_load:.1f} s and the
-first answer was already at full speed. Cold-start cost, not throughput, is where Colab loses.</div>
+first answer was already at full speed. Jetstream2's A100 showed the same warm-up as Colab — {a100_first:.0f} s for the first answer after
+the service restarted — so this is a property of the NVIDIA/CUDA start-up, not of Colab. Cold-start cost, not throughput, is where the
+cloud GPUs lose.</div>
+<div class="note"><b>Model size on one GPU.</b> On the A100, <code>qwen3:14b</code> (8877 MiB, entirely in GPU memory) generated
+{summary[('jetstream2-a100', 'qwen3:14b')]['tps']:.1f} tokens/s. <code>qwen3:32b</code> needs 20033 MiB — more than the 20 GiB slice — so
+Ollama placed 17121 MiB on the GPU and the rest on the CPU, and speed collapsed to
+{summary[('jetstream2-a100', 'qwen3:32b')]['tps']:.1f} tokens/s: 2.2× the parameters for {summary[('jetstream2-a100', 'qwen3:14b')]['tps']/summary[('jetstream2-a100', 'qwen3:32b')]['tps']:.0f}× less speed.
+The limit is not "does it load" but "does it fit in VRAM".</div>
 <h3>Every measurement, per prompt</h3>
 {per_prompt}
 """

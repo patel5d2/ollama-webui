@@ -1,0 +1,6 @@
+environment,model,parameter_size,quantization,prompt_id,condition,load_wall_s,load_server_s,answer_wall_s,server_total_s,generation_s,output_tokens,tokens_per_second,model_allocation_bytes,gpu_allocation_bytes,temperature,top_p,num_predict,done_reason
+jetstream2-cpu-fallback,qwen3:14b,14.8B,Q4_K_M,P1,baseline,14.617497466970235,,18.06249066500459,18.058832211,16.232276,71,4.374001526341716,9757387652,0,0.2,0.9,192,stop
+jetstream2-cpu-fallback,qwen3:14b,14.8B,Q4_K_M,P2,baseline,14.617497466970235,,20.688812671927735,20.686661077,19.302006,83,4.30007119467272,9757387652,0,0.2,0.9,192,stop
+jetstream2-cpu-fallback,qwen3:14b,14.8B,Q4_K_M,P3,baseline,14.617497466970235,,15.823403761954978,15.821308885,14.423098,64,4.437326848919699,9757387652,0,0.2,0.9,192,stop
+jetstream2-cpu-fallback,qwen3:14b,14.8B,Q4_K_M,P4,baseline,14.617497466970235,,15.424783837981522,15.421757484,13.343397,58,4.346719205012037,9757387652,0,0.2,0.9,192,stop
+jetstream2-cpu-fallback,qwen3:14b,14.8B,Q4_K_M,P5,baseline,14.617497466970235,,11.74307368893642,11.740590588,9.881404,43,4.351608334200281,9757387652,0,0.2,0.9,192,stop

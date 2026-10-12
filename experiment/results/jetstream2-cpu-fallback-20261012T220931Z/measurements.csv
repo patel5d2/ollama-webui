@@ -1,0 +1,4 @@
+environment,model,parameter_size,quantization,prompt_id,condition,load_wall_s,load_server_s,answer_wall_s,server_total_s,generation_s,output_tokens,tokens_per_second,model_allocation_bytes,gpu_allocation_bytes,temperature,top_p,num_predict,done_reason
+jetstream2-cpu-fallback,qwen3:1.7b,2.0B,Q4_K_M,P1,temp-low,2.3113341860007495,,6.020794879063033,6.017878683,5.690739,112,19.681099414329143,1645446429,0,0.1,0.9,192,stop
+jetstream2-cpu-fallback,qwen3:1.7b,2.0B,Q4_K_M,P1,temp-high,2.3113341860007495,,4.652884760987945,4.649660463,4.577134,91,19.88143672437818,1645446429,0,1.2,0.9,192,stop
+jetstream2-cpu-fallback,qwen3:1.7b,2.0B,Q4_K_M,P1,tokens-64,2.3113341860007495,,3.2314708429621533,3.22922497,3.161817,64,20.2415256796962,1645446429,0,0.1,0.9,64,length

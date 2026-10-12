@@ -1,0 +1,4 @@
+environment,model,parameter_size,quantization,prompt_id,condition,load_wall_s,load_server_s,answer_wall_s,server_total_s,generation_s,output_tokens,tokens_per_second,model_allocation_bytes,gpu_allocation_bytes,temperature,top_p,num_predict,done_reason
+jetstream2-a100,qwen3:1.7b,2.0B,Q4_K_M,P1,temp-low,2.300113731995225,,0.5502460279967636,0.547775772,0.419717,108,257.3162392755118,1465615645,1465615645,0.1,0.9,192,stop
+jetstream2-a100,qwen3:1.7b,2.0B,Q4_K_M,P1,temp-high,2.300113731995225,,0.3236703850561753,0.321493332,0.298172,97,325.3155896596595,1465615645,1465615645,1.2,0.9,192,stop
+jetstream2-a100,qwen3:1.7b,2.0B,Q4_K_M,P1,tokens-64,2.300113731995225,,0.2249671509489417,0.2230881,0.199517,64,320.77467083005456,1465615645,1465615645,0.1,0.9,64,length

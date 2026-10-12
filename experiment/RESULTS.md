@@ -7,6 +7,15 @@
 | colab-t4 | llama3.2:1b | 1.2B | Q8_0 | colab-t4-20260923T150703Z | 5 | 21.08 | 0.74 | 139.0 | 1378 | 1378 |
 | colab-t4 | qwen2.5-hf:0.5b | 630.17M | Q4_K_M | colab-t4-20260923T150703Z | 5 | 16.33 | 0.28 | 246.5 | 433 | 433 |
 | colab-t4 | qwen3:1.7b | 2.0B | Q4_K_M | colab-t4-20260923T150703Z | 5 | 64.61 | 1.10 | 118.8 | 1398 | 1398 |
+| jetstream2-a100 | llama3.2:1b | 1.2B | Q8_0 | jetstream2-a100-20261012T221227Z | 5 | 10.66 | 0.40 | 412.2 | 1378 | 1378 |
+| jetstream2-a100 | qwen2.5-hf:0.5b | 630.17M | Q4_K_M | jetstream2-a100-20261012T221227Z | 5 | 6.91 | 0.35 | 460.5 | 433 | 433 |
+| jetstream2-a100 | qwen3:1.7b | 2.0B | Q4_K_M | jetstream2-a100-20261012T221227Z | 5 | 32.51 | 0.44 | 314.9 | 1398 | 1398 |
+| jetstream2-a100 | qwen3:14b | 14.8B | Q4_K_M | jetstream2-a100-20261012T221440Z | 5 | 8.22 | 0.81 | 88.2 | 8877 | 8877 |
+| jetstream2-a100 | qwen3:32b | 32.8B | Q4_K_M | jetstream2-a100-20261012T221440Z | 5 | 6.53 | 7.20 | 11.1 | 20033 | 17121 |
+| jetstream2-cpu-fallback | llama3.2:1b | 1.2B | Q8_0 | jetstream2-cpu-fallback-20261012T220822Z | 5 | 1.82 | 2.28 | 24.8 | 1383 | 0 |
+| jetstream2-cpu-fallback | qwen2.5-hf:0.5b | 630.17M | Q4_K_M | jetstream2-cpu-fallback-20261012T220822Z | 5 | 1.05 | 2.71 | 27.3 | 525 | 0 |
+| jetstream2-cpu-fallback | qwen3:1.7b | 2.0B | Q4_K_M | jetstream2-cpu-fallback-20261012T220822Z | 5 | 2.31 | 5.89 | 19.8 | 1569 | 0 |
+| jetstream2-cpu-fallback | qwen3:14b | 14.8B | Q4_K_M | jetstream2-cpu-fallback-20261012T220947Z | 5 | 14.62 | 15.82 | 4.4 | 9305 | 0 |
 | local-docker-cpu | llama3.2:1b | 1.2B | Q8_0 | local-docker-cpu-20260923T142758Z | 5 | 6.60 | 0.95 | 64.8 | 1649 | 0 |
 | local-docker-cpu | qwen2.5-hf:0.5b | 630.17M | Q4_K_M | local-docker-cpu-20260923T143015Z | 5 | 1.55 | 1.05 | 120.3 | 525 | 0 |
 | local-docker-cpu | qwen3:1.7b | 2.0B | Q4_K_M | local-docker-cpu-20260923T142144Z | 5 | 6.25 | 2.89 | 51.8 | 1569 | 0 |
@@ -21,6 +30,12 @@
 | colab-t4 | temp-low | 0.1 | 192 | 1.01 | 110.0 | 94 | stop |
 | colab-t4 | temp-high | 1.2 | 192 | 0.89 | 114.5 | 98 | stop |
 | colab-t4 | tokens-64 | 0.1 | 64 | 0.58 | 115.8 | 64 | length |
+| jetstream2-a100 | temp-low | 0.1 | 192 | 0.55 | 257.3 | 108 | stop |
+| jetstream2-a100 | temp-high | 1.2 | 192 | 0.32 | 325.3 | 97 | stop |
+| jetstream2-a100 | tokens-64 | 0.1 | 64 | 0.22 | 320.8 | 64 | length |
+| jetstream2-cpu-fallback | temp-low | 0.1 | 192 | 6.02 | 19.7 | 112 | stop |
+| jetstream2-cpu-fallback | temp-high | 1.2 | 192 | 4.65 | 19.9 | 91 | stop |
+| jetstream2-cpu-fallback | tokens-64 | 0.1 | 64 | 3.23 | 20.2 | 64 | length |
 | local-docker-cpu | temp-low | 0.1 | 192 | 2.49 | 54.7 | 112 | stop |
 | local-docker-cpu | temp-high | 1.2 | 192 | 1.86 | 54.6 | 99 | stop |
 | local-docker-cpu | tokens-64 | 0.1 | 64 | 1.17 | 56.6 | 64 | length |

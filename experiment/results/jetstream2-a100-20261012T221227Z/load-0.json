@@ -1,0 +1,10 @@
+{
+  "wall_s": 32.51468429900706,
+  "response": {
+    "model": "qwen3:1.7b",
+    "created_at": "2026-10-12T22:13:00.257141085Z",
+    "response": "",
+    "done": true,
+    "done_reason": "load"
+  }
+}
