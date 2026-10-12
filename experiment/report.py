@@ -8,6 +8,8 @@ ENV_LABEL = {'local-docker-cpu': 'Own computer — Docker (CPU only)',
              'colab-t4': 'Google Colab — free T4 GPU',
              'jetstream2-cpu-fallback': 'Jetstream2 VM — before the fix (GPU not detected, CPU only)',
              'jetstream2-a100': 'Jetstream2 VM — NVIDIA A100 vGPU (20 GiB)'}
+VIDEO_URL = ''  # paste your video link here, then rebuild the report
+WEBUI_SHOT = ROOT / 'evidence' / 'open-webui.png'  # save your Open WebUI screenshot here
 SHORT = {'local-docker-cpu': 'Mac — Docker CPU', 'local-metal-gpu': 'Mac — Apple GPU', 'colab-t4': 'Colab — T4',
          'jetstream2-cpu-fallback': 'Jetstream2 — CPU fallback', 'jetstream2-a100': 'Jetstream2 — A100'}
 MODELS = ['qwen3:1.7b', 'llama3.2:1b', 'qwen2.5-hf:0.5b', 'qwen3:14b', 'qwen3:32b']
@@ -168,7 +170,7 @@ HTML = f"""<!doctype html><html><head><meta charset="utf-8"><title>Running LLMs 
 Jetstream2 runs added 12 October 2026, after class access was granted on 10 October.</p>
 
 <div class="title-box">
-<p><b>Video (5–10 minutes, live screens):</b> <b style="color:#b00">&lt;paste your video link here before submitting&gt;</b></p>
+<p><b>Video (5–10 minutes, live screens):</b> {f'<a href="{html.escape(VIDEO_URL)}">{html.escape(VIDEO_URL)}</a>' if VIDEO_URL else '<b style="color:#b00">&lt;paste your video link here before submitting&gt;</b>'}</p>
 <p><b>Provenance statement.</b> The measured runs in this report were produced with an AI assistant driving the tooling.
 Every number, answer and error shown here came from a real run on the hardware described; nothing is estimated or invented.
 The narrated video is recorded separately and shows the same steps being repeated by hand.</p>
@@ -249,8 +251,7 @@ ollama      Up 56 minutes (healthy)</pre>
 <code>qwen3:1.7b</code> at <b>100% GPU</b>, <code>nvidia-smi</code> shows 1892 MiB in use on the A100, and the server log is mid-request
 with the fixed sampler settings (<code>top_p 0.900</code>, <code>temp 0.200</code>). Before the fix the same command said
 <code>100% CPU</code> (section 10).</figcaption></figure>
-<div class="note"><b>Screenshot to add yourself:</b> Open WebUI at <code>localhost:3000</code> with a model selected and an answer on
-screen (it sits behind a sign-in, so it is not captured here). The same window is shown live in the video.</div>
+{'<figure><img src="evidence/open-webui.png"><figcaption><b>Task 1 / Task 3 — Open WebUI screenshot.</b> The graphical interface at <code>localhost:3000</code> with a model selected and its answer on screen.</figcaption></figure>' if WEBUI_SHOT.exists() else '<div class="note"><b>Screenshot to add yourself:</b> Open WebUI at <code>localhost:3000</code> with a model selected and an answer on screen, saved as <code>evidence/open-webui.png</code>. The same window is shown live in the video.</div>'}
 
 <h2>4. Task 2 — Five models, two families, five sizes, one from Hugging Face</h2>
 <table><thead><tr><th>Model</th><th>Family</th><th>Marketing size</th><th>Reported parameters</th><th>Quantization</th><th>Disk</th><th>Source</th></tr></thead><tbody>
@@ -331,6 +332,10 @@ cloud GPUs lose.</div>
 Ollama placed 17121 MiB on the GPU and the rest on the CPU, and speed collapsed to
 {summary[('jetstream2-a100', 'qwen3:32b')]['tps']:.1f} tokens/s: 2.2× the parameters for {summary[('jetstream2-a100', 'qwen3:14b')]['tps']/summary[('jetstream2-a100', 'qwen3:32b')]['tps']:.0f}× less speed.
 The limit is not "does it load" but "does it fit in VRAM".</div>
+<figure><img src="evidence/jetstream2-a100-runs.png">
+<figcaption><b>Task 2 / Task 5 — Screenshot 3.</b> <code>run.py</code> on the Jetstream2 A100 after the GPU fix: per-prompt answer time
+and tokens/s for all five models, and the evidence folder each run saved. Note the slow first prompt of the first model (CUDA warm-up)
+and the drop from ~88 to ~11 tokens/s between the 14B and the 32B.</figcaption></figure>
 <h3>Every measurement, per prompt</h3>
 {per_prompt}
 """
@@ -338,43 +343,58 @@ The limit is not "does it load" but "does it fit in VRAM".</div>
 s_cpu = summary[('local-docker-cpu', 'qwen3:1.7b')]
 s_gpu = summary[('local-metal-gpu', 'qwen3:1.7b')]
 s_t4 = summary[('colab-t4', 'qwen3:1.7b')]
+s_a = summary[('jetstream2-a100', 'qwen3:1.7b')]
+s_jc = summary[('jetstream2-cpu-fallback', 'qwen3:1.7b')]
+q14 = summary[('jetstream2-a100', 'qwen3:14b')]
+q14c = summary[('jetstream2-cpu-fallback', 'qwen3:14b')]
+q32 = summary[('jetstream2-a100', 'qwen3:32b')]
+a100_gain = s_a['tps'] / s_cpu['tps']
+fix_gain = s_a['tps'] / s_jc['tps']
 
 HTML += f"""
 <h2 class="break">8. How good were the answers?</h2>
 <p>Speed is only half the comparison; the same five prompts also expose what each model gets wrong.</p>
 {qual_table}
-<div class="note"><b>The most important result in this table</b> is the P2 row. <code>llama3.2:1b</code> answered 120 correctly on both
-local backends and 126 on the Colab T4 with the same prompt, the same temperature, the same top_p and the same seed. Identical
-settings do not produce identical text across different hardware and backends, so a model that passes a test on your laptop can
-still fail it on a server.</div>
+<div class="note"><b>The most important result in this table</b> is the P2 row. <code>llama3.2:1b</code> answered 120 correctly on four
+backends and 126 on the Colab T4 with the same prompt, the same temperature, the same top_p and the same seed. Identical settings do
+not produce identical text across different hardware and backends, so a model that passes a test on your laptop can still fail it on a
+server. Jetstream2 gave the cleanest version of this result: <b>on the same VM, with the same Ollama, model files and seed, the CPU and
+the A100 produced different text for 12 of 20 baseline answers</b>. The 0.5B model's P5 failure also grouped by backend rather than by
+machine: both CPU backends invented a Star Wars origin, and both NVIDIA GPUs returned the identical refusal.</div>
+<div class="note"><b>Size bought correctness.</b> Only <code>qwen3:14b</code> and <code>qwen3:32b</code> answered all five prompts
+acceptably. Every small model failed at least one: a refusal on the security question, an unfinished calculation, or a code example
+that misstated its own output.</div>
 
 <h2>9. Comparing the environments</h2>
-<table><thead><tr><th>Criterion</th><th>Own computer — Docker (CPU)</th><th>Own computer — native (Apple GPU)</th><th>Google Colab — T4</th></tr></thead><tbody>
-<tr><td>Ease of setup</td><td>Already installed; one <code>docker compose up</code></td><td>Download and unzip the app, start the server with two environment variables</td><td>No install on your machine, but the documented installer failed and needed debugging (section 10)</td></tr>
-<tr><td>Speed (qwen3:1.7b)</td><td>{s_cpu['tps']:.1f} tokens/s, median answer {s_cpu['answer']:.2f} s</td><td>{s_gpu['tps']:.1f} tokens/s ({gpu_gain:.2f}× CPU), median answer {s_gpu['answer']:.2f} s</td><td>{s_t4['tps']:.1f} tokens/s ({t4_gain:.2f}× CPU), median answer {s_t4['answer']:.2f} s</td></tr>
-<tr><td>Cold start</td><td>{s_cpu['load']:.1f} s load</td><td>{s_gpu['load']:.1f} s load, first answer already at full speed</td><td>{s_t4['load']:.0f} s load and a {s_t4['first']:.0f} s first answer, on top of ~2 minutes of install and model pulls</td></tr>
-<tr><td>Model sizes that ran</td><td>All three (630M – 2.0B) succeeded; largest resident allocation 1649 MiB inside a 3.83 GiB VM</td><td>All three succeeded; 1561 MiB in VRAM out of 16 GB unified</td><td>All three succeeded; 1398 MiB out of 15360 MiB — the T4 had room for a far larger model than anything tested</td></tr>
-<tr><td>Sizes that did <i>not</i> run</td><td colspan="3">None were attempted beyond 2.0B. Jetstream2, where the larger model was planned, was unavailable, so "the biggest model that fits" remains untested — an honest gap, not a result.</td></tr>
-<tr><td>Cost</td><td colspan="2">Hardware already owned; electricity only</td><td>Free tier; a GPU session is not guaranteed and is capped</td></tr>
-<tr><td>Privacy</td><td colspan="2">Prompts never leave the machine; no network needed once the weights are downloaded</td><td>Every prompt and answer is processed on Google's hardware</td></tr>
-<tr><td>Reliability</td><td colspan="2">Persistent; models stay installed between sessions</td><td>Session-scoped: the runtime disconnects, and <b>everything in <code>/content</code> is lost</b>. The "too many sessions" limit also blocked a run until an old session was terminated.</td></tr>
+<table><thead><tr><th>Criterion</th><th>Own computer — Docker (CPU)</th><th>Own computer — native (Apple GPU)</th><th>Google Colab — T4</th><th>Jetstream2 — A100 vGPU</th></tr></thead><tbody>
+<tr><td>Ease of setup</td><td>Already installed; one <code>docker compose up</code></td><td>Download and unzip the app, start the server with two environment variables</td><td>No install on your machine, but the documented installer failed and needed debugging (section 10)</td><td>Official installer worked first time (about 10 s); five models pulled in about 2 minutes. But access took days to be granted, the VM is reached through a browser desktop, and Ollama <b>silently ran on the CPU</b> until a Linux group permission was fixed (section 10)</td></tr>
+<tr><td>Speed (qwen3:1.7b)</td><td>{s_cpu['tps']:.1f} tokens/s, median answer {s_cpu['answer']:.2f} s</td><td>{s_gpu['tps']:.1f} tokens/s ({gpu_gain:.2f}× CPU), median answer {s_gpu['answer']:.2f} s</td><td>{s_t4['tps']:.1f} tokens/s ({t4_gain:.2f}× CPU), median answer {s_t4['answer']:.2f} s</td><td><b>{s_a['tps']:.1f} tokens/s</b> ({a100_gain:.1f}× CPU), median answer {s_a['answer']:.2f} s. Before the fix: {s_jc['tps']:.1f} tokens/s</td></tr>
+<tr><td>Cold start</td><td>{s_cpu['load']:.1f} s load</td><td>{s_gpu['load']:.1f} s load, first answer already at full speed</td><td>{s_t4['load']:.0f} s load and a {s_t4['first']:.0f} s first answer, on top of ~2 minutes of install and model pulls</td><td>{s_a['load']:.0f} s load and a {s_a['first']:.0f} s first answer for the first model after a restart; later models loaded in 7–11 s</td></tr>
+<tr><td>Model sizes that ran</td><td>All three small models (630M – 2.0B); largest resident allocation 1649 MiB inside a 3.83 GiB VM</td><td>All three; 1561 MiB in VRAM out of 16 GB unified</td><td>All three; 1398 MiB out of 15360 MiB</td><td>All five (630M – 32.8B). 14.8B fit entirely in VRAM (8877 MiB); 32.8B did not (17121 of 20033 MiB on the GPU) and slowed to {q32['tps']:.1f} tokens/s</td></tr>
+<tr><td>Sizes that did <i>not</i> run</td><td colspan="4">On the Mac and Colab nothing above 2.0B was attempted, because the large-model test was planned for the server. On Jetstream2 the 32B ran, but only partly on the GPU. A 70B model (~43 GB at Q4_K_M) was not attempted: after the five pulls the VM had 11 GB of disk free, and the weights could never fit a 20 GiB GPU.</td></tr>
+<tr><td>Cost</td><td colspan="2">Hardware already owned; electricity only</td><td>Free tier; a GPU session is not guaranteed and is capped</td><td>Free to the student, but it spends the class's shared allocation for as long as the VM runs — shelve it when finished</td></tr>
+<tr><td>Privacy</td><td colspan="2">Prompts never leave the machine; no network needed once the weights are downloaded</td><td>Every prompt and answer is processed on Google's hardware</td><td>Prompts leave your computer, but are processed on a VM you control on a university research cloud, not by a commercial AI service</td></tr>
+<tr><td>Reliability</td><td colspan="2">Persistent; models stay installed between sessions</td><td>Session-scoped: the runtime disconnects, and <b>everything in <code>/content</code> is lost</b>. The "too many sessions" limit also blocked a run until an old session was terminated.</td><td>Persistent: models and results stayed on the VM's disk between sessions. But "running" did not mean "using the GPU" — the CPU fallback gave no error, only <code>ollama ps</code> revealed it</td></tr>
 </tbody></table>
 
 <h3>Recommendations, each backed by the numbers above</h3>
 <ol>
-<li><b>Everyday work for a security analyst → the analyst's own machine, running natively on its GPU.</b>
-{s_gpu['tps']:.1f} tokens/s against {s_cpu['tps']:.1f} on the CPU-limited container is a {gpu_gain:.2f}× gain for zero extra cost, the model
-loads in {s_gpu['load']:.1f} s instead of {s_t4['load']:.0f} s, and it is still there tomorrow morning. The Colab T4 is only
-{s_t4['tps']/s_gpu['tps']:.2f}× faster than the Apple GPU at generation — not enough to justify re-installing everything at the start of
-each session.</li>
-<li><b>Sensitive or confidential data → local only, and preferably the native install.</b> This is not a speed argument: on the two
-local backends the prompt never leaves the machine, while on Colab every prompt is processed by a third party. The measured cost
-of choosing privacy is small — the local GPU already reaches {s_gpu['tps']/s_t4['tps']*100:.0f}% of the T4's generation speed on the
-same model. If policy forbids third-party processing, the T4 is not an option at any speed.</li>
-<li><b>A quick experiment that has to be finished today → Colab.</b> It is the fastest environment measured
-({s_t4['tps']:.1f} tokens/s, {t4_gain:.2f}× the CPU container) and needs nothing installed locally; total setup was about two minutes
-of install and model pulls. Accept the trade: roughly {s_t4['first']:.0f} s before the first useful answer and everything deleted when the
-runtime ends, so download the evidence before you close the tab.</li>
+<li><b>Everyday work for a security analyst → a persistent GPU server such as the Jetstream2 VM, running a 14B-class model.</b>
+Only the 14B and 32B models answered all five prompts acceptably, and the security question is where the small ones failed (Llama refused it on every
+backend). On the A100, <code>qwen3:14b</code> answered in a median {q14['answer']:.2f} s at {q14['tps']:.1f} tokens/s; the same model on the
+same VM's CPU took {q14c['answer']:.1f} s per answer at {q14c['tps']:.1f} tokens/s, too slow to use all day. The 14B beats the 32B: the same
+correct answers, {q14['tps']/q32['tps']:.0f}× faster, because it fits in VRAM. Without a server allocation, the fallback is the analyst's own
+native GPU ({s_gpu['tps']:.1f} tokens/s on the small model), accepting the small models' weaker answers.</li>
+<li><b>Sensitive or confidential data → the analyst's own machine, native install.</b> This is not a speed argument: locally the prompt never
+leaves the machine. Jetstream2 is the better second choice over Colab (your own VM on university infrastructure, rather than a commercial
+third party), but it is still off-device. The cost of privacy is measurable: the Mac's GPU runs <code>qwen3:1.7b</code> at {s_gpu['tps']:.1f} tokens/s
+against {s_a['tps']:.1f} on the A100 ({s_a['tps']/s_gpu['tps']:.1f}× slower), and only the small models were tested locally. The obvious next test is
+whether the 9.3 GB <code>qwen3:14b</code> fits in the Mac's 16 GB of unified memory; it was not run here.</li>
+<li><b>A quick experiment that has to be finished today → Colab, unless a Jetstream2 VM is already running and verified on its GPU.</b>
+Colab needs only a Google account: about two minutes of install and model pulls, then {s_t4['tps']:.1f} tokens/s. Jetstream2 was faster
+({s_a['tps']:.1f} tokens/s) and installed in seconds, but access took days to be granted, and the first run used the CPU at
+{s_jc['tps']:.1f} tokens/s without any error message. Against a deadline, that hidden failure costs more than the speed saves. On Colab,
+accept the {s_t4['first']:.0f} s first answer and download the evidence before the runtime ends.</li>
 </ol>
 
 <h2>10. Problems, and how they were handled</h2>
@@ -384,11 +404,11 @@ runtime ends, so download the evidence before you close the tab.</li>
 releases ship <code>.tar.zst</code> instead.</td>
 <td>Fetch <code>ollama-linux-amd64.tar.zst</code> directly, install <code>zstd</code>, extract into <code>/usr/local</code>, and skip the
 installer's systemd and user-account steps that a Colab VM does not need. Ollama then reported
-<code>{{"version":"0.34.3"}}</code> (Screenshot 1).</td></tr>
+<code>{{"version":"0.34.3"}}</code> (Screenshot 1). By 12 October the official installer had been fixed and worked first time on Jetstream2.</td></tr>
 <tr><td>2</td><td><code>ollama pull hf.co/Qwen/...</code> refused: "blocked redirect to a different host"</td>
 <td>Ollama would not follow Hugging Face's CDN redirect.</td>
 <td>Download the GGUF with <code>curl</code>, record its SHA-256, and import it with a two-line <code>Modelfile</code> as
-<code>qwen2.5-hf:0.5b</code>. The same method is used in Colab, and the hashes match.</td></tr>
+<code>qwen2.5-hf:0.5b</code>. The same method is used in Colab and on Jetstream2, and all three hashes match.</td></tr>
 <tr><td>3</td><td>Colab refused to start the runtime: "Too many sessions"</td>
 <td>An earlier notebook still held the single free GPU session.</td>
 <td>Terminate the stale session from <b>Manage sessions</b>, then reconnect. Worth knowing before a demo: the free tier gives you one.</td></tr>
@@ -396,21 +416,44 @@ installer's systemd and user-account steps that a Colab VM does not need. Ollama
 <td>The server answers <code>done_reason=load</code> without the timing field.</td>
 <td>Report the measured wall time and leave the server field blank. An earlier CSV recorded <code>0</code> there, which wrongly
 implied an instant load; the field is unavailable, not zero.</td></tr>
-<tr><td>5</td><td>First Colab answers looked absurdly slow ({s_t4['first']:.0f} s) while generation speed was high</td>
+<tr><td>5</td><td>First answers on both NVIDIA GPUs looked absurdly slow (Colab {s_t4['first']:.0f} s, A100 {s_a['first']:.0f} s) while generation speed was high</td>
 <td>The empty-prompt load returns before the GPU has finished warming up, so the warm-up lands on the first real prompt.</td>
 <td>Keep the raw numbers and report medians alongside the first-answer cost, rather than quietly dropping the outlier.</td></tr>
 <tr><td>6</td><td>The first local Qwen baseline overlapped a model download</td>
 <td>Background network and disk activity during timing.</td>
 <td>Kept as exploratory evidence and flagged; it is the one Docker row not collected on an otherwise quiet machine.</td></tr>
-<tr><td>7</td><td>Jetstream2 unavailable</td><td>No class access at the time of the runs.</td>
-<td>Omitted, and said so. No cloud-server numbers are invented; the larger-model test that depended on it is reported as untested.</td></tr>
+<tr><td>7</td><td>Jetstream2 access arrived late</td><td>Class access was granted on Saturday 10 October, after the other environments were finished.</td>
+<td>Ran the identical runner and prompts on 12 October; the prompt SHA-256 in every Jetstream2 manifest matches the earlier runs.</td></tr>
+<tr><td>8</td><td><b>Ollama on the A100 VM ran 100% on the CPU</b> — {s_jc['tps']:.1f} tokens/s for <code>qwen3:1.7b</code>, slower than the Mac's
+CPU container — and printed no error</td>
+<td><code>ollama ps</code> said <code>100% CPU</code>; <code>nvidia-smi</code> showed 0 MiB used; the server log said
+<code>inference compute id=cpu library=cpu</code> and <code>total_vram="0 B"</code>. <code>ls -l /dev/nvidia*</code> showed
+<code>/dev/nvidia0</code> and <code>/dev/nvidiactl</code> as <code>crw-rw---- root vglusers</code>, and <code>id ollama</code> showed the
+installer's service account was not in <code>vglusers</code>. My own account was, which is why <code>nvidia-smi</code> worked for me.</td>
+<td><code>sudo usermod -aG vglusers ollama &amp;&amp; sudo systemctl restart ollama</code>. The log then reported
+<code>library=CUDA … description="GRID A100X-20C" … total="20.0 GiB"</code> and speed rose to {s_a['tps']:.1f} tokens/s
+({fix_gain:.0f}×). The CPU runs were kept, relabelled <code>jetstream2-cpu-fallback</code>.</td></tr>
+<tr><td>9</td><td><code>qwen3:32b</code> generated only {q32['tps']:.1f} tokens/s on the A100</td>
+<td>It needs 20033 MiB and the GPU slice has 20 GiB; Ollama put 17121 MiB on the GPU and the rest on the CPU.</td>
+<td>Not a bug but the size limit of this GPU. Recommend the 14B, which fits and is {q14['tps']/q32['tps']:.0f}× faster.</td></tr>
+<tr><td>10</td><td>No SSH access to the VM, so the results were stuck on it</td>
+<td>The VM was reached only through the Exosphere web desktop (Guacamole); no key of mine was installed.</td>
+<td>Packed the results into a 31.7 KB <code>tar.xz</code>, base64-encoded it onto the remote clipboard with <code>xclip</code>, which
+Guacamole passed to the Mac's clipboard. The SHA-256 matched on both ends.</td></tr>
+<tr><td>11</td><td>VM disk 82% full after five models</td><td>47 GB of 58 GB used, mostly the 20 GB 32B model.</td>
+<td>No 70B attempt; delete the large models when finished.</td></tr>
 </tbody></table>
 
 <h2>11. Limits of this comparison</h2>
 <ul>
 <li><b>One run per prompt.</b> These are exploratory measurements, not statistically robust benchmarks; no repeats, no error bars.</li>
-<li><b>The CPU/GPU comparison is not clean.</b> The container had 4 CPUs, 3.83 GiB and Ollama 0.34.2; the native Mac had 12 cores,
-16 GiB and 0.34.3. The GPU is not the only variable.</li>
+<li><b>The Mac CPU/GPU comparison is not clean.</b> The container had 4 CPUs, 3.83 GiB and Ollama 0.34.2; the native Mac had 12 cores,
+16 GiB and 0.34.3. The GPU is not the only variable. The Jetstream2 CPU/A100 pair is the controlled one.</li>
+<li><b>Ollama versions differ across dates:</b> 0.34.2/0.34.3 in September, 0.40.3 on Jetstream2 in October.</li>
+<li><b>The A100 is a 20 GiB virtual slice</b> (GRID A100X-20C), not a whole 40 or 80 GB card; a full A100 would fit the 32B.</li>
+<li><b>The large models were run only on Jetstream2</b>, so the size comparison across environments is incomplete.</li>
+<li><b>The Jetstream2 CPU fallback is not a fair CPU benchmark.</b> Its 16 EPYC vCPUs were slower than the Mac's 4-CPU container; the cause
+(CPU generation, memory bandwidth, virtualisation) was not investigated.</li>
 <li><b>Memory is an allocation snapshot</b> from <code>/api/ps</code>, not peak RSS or whole-machine usage.</li>
 <li><b>Caches were not cleared</b> between runs, so "unloaded" does not mean "read cold from disk".</li>
 <li><b>Answer quality was judged by reading the answers</b> against the expectations fixed in the plan, not by a scored rubric.</li>
@@ -433,10 +476,18 @@ evidence/                screenshots and logs</pre>
 <pre>$ docker compose up -d                                       # Docker CPU
 $ python3 experiment/run.py --environment local-docker-cpu
 $ python3 experiment/run.py --environment local-metal-gpu --url http://127.0.0.1:11435   # native GPU
-$ python3 experiment/run.py --environment colab-t4           # in the Colab notebook</pre>
+$ python3 experiment/run.py --environment colab-t4           # in the Colab notebook
+
+# Jetstream2 VM (terminal on the web desktop)
+$ curl -fsSL https://ollama.com/install.sh | sh
+$ sudo usermod -aG vglusers ollama &amp;&amp; sudo systemctl restart ollama   # let the service open the GPU
+$ ollama ps                                                  # must say "100% GPU", not "100% CPU"
+$ python3 run.py --environment jetstream2-a100
+$ python3 run.py --environment jetstream2-a100 --models qwen3:1.7b --settings
+$ python3 run.py --environment jetstream2-a100 --models qwen3:14b qwen3:32b</pre>
 <p>Colab notebook: <code>https://colab.research.google.com/drive/1EDD1vaZj1z4kkD-GbKDRF1u2NWps7pkY</code></p>
 <figure><img src="evidence/colab-t4-answers.jpg">
-<figcaption><b>Task 3 / Task 5 — Screenshot 2.</b> Raw measurements and generated answers read back inside the Colab notebook:
+<figcaption><b>Task 3 / Task 5 — Screenshot 4.</b> Raw measurements and generated answers read back inside the Colab notebook:
 the measurement record for each prompt, the prompt itself, and the model's text — including
 <code>qwen2.5-hf:0.5b</code> refusing the fabricated-citation prompt P5 on the T4.</figcaption></figure>
 </body></html>

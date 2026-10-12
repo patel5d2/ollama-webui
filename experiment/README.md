@@ -2,7 +2,7 @@
 
 The saved plan is PLAN.md, fixed inputs are prompts.json, and run.py measures real Ollama API responses. Raw results are under results/ with a CSV, hardware output, settings, model metadata, and complete responses for each successful suite.
 
-Jetstream2 is omitted because the user confirmed it is unavailable. The assignment allows this. The remaining cloud environment is Google Colab.
+Environments: own Mac (Docker CPU and native Apple GPU), Google Colab free T4, and a Jetstream2 VM with an A100 vGPU (added 2026-10-12, see NOTES.md for the GPU-permission fix).
 
 ## Repeat local CPU runs
 
@@ -38,6 +38,21 @@ Official repository: https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF
 
 Exact downloaded artifact: qwen2.5-0.5b-instruct-q4_k_m.gguf. Local alias: qwen2.5-hf:0.5b. SHA256 is in evidence/huggingface-sha256.txt. Ollama's direct hf.co pull rejected the CDN redirect; curl succeeded and the file was imported through a Modelfile.
 
+## Jetstream2
+
+On the VM (web desktop terminal), with run.py and prompts.json copied next to each other:
+
+```sh
+curl -fsSL https://ollama.com/install.sh | sh
+sudo usermod -aG vglusers ollama && sudo systemctl restart ollama   # otherwise Ollama silently uses the CPU
+ollama ps                                                         # must say 100% GPU while a model is loaded
+python3 run.py --environment jetstream2-a100
+python3 run.py --environment jetstream2-a100 --models qwen3:1.7b --settings
+python3 run.py --environment jetstream2-a100 --models qwen3:14b qwen3:32b
+```
+
+Shelve the instance in Exosphere when finished; it spends the class allocation while running.
+
 ## Colab
 
 Notebook (the one that actually ran): https://colab.research.google.com/drive/1EDD1vaZj1z4kkD-GbKDRF1u2NWps7pkY
@@ -58,8 +73,8 @@ Read NOTES.md before using the results. VIDEO_GUIDE.md is an outline for your ow
 ```sh
 experiment/.venv/bin/python experiment/analyze.py   # RESULTS.md + comparison.png
 experiment/.venv/bin/python experiment/report.py    # REPORT.html
-"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --no-pdf-header-footer \
-  --print-to-pdf=experiment/REPORT.pdf experiment/REPORT.html
+~/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell \
+  --no-pdf-header-footer --print-to-pdf="$PWD/experiment/REPORT.pdf" "file://$PWD/experiment/REPORT.html"
 ```
 
 REPORT.pdf is the submission document. Paste the video link into the box on page one before submitting, and add your own
