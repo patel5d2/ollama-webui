@@ -61,7 +61,7 @@ session ends everything here is deleted."
 **SAY:** "Third, Jetstream2: a Linux server with a 20-gigabyte slice of an NVIDIA A100. I got access on Saturday. Here I
 could try bigger models: this is Qwen3 14B, about eight times bigger than anything on my Mac, answering the phishing question."
 
-*(when it finishes, point at "eval rate")* "That's about [read the number, around 85–90] tokens a second, and `ollama ps`
+*(when it finishes, point at "eval rate")* "That's about [read the eval rate, about 74 in your test run] tokens a second, close to the 88 my script measured, and `ollama ps`
 confirms it's running 100 percent on the GPU."
 
 **SHOW:** run `ls -l /dev/nvidia*` and `id ollama`.
